@@ -8,14 +8,14 @@
         <label for="statusSelect">NAME:</label>
         <input type="text" id="statusSelect" name="name" />
         
-        <label for="statusSelect">CODE:</label>
-        <input type="text" id="statusSelect" name="code" />
 
         <label for="statusSelect">CATEGORY:</label>
         <select id="statusSelect" name="category">
-            <option value="MEAL">MEAL</option>
-            <option value="DRINKS">DRINK</option>
-            <option value="EXTRA">EXTRA</option>
+             <?php
+              $productCategory = $portCont->categoryProduct();
+              if (! empty($productCategory)) { foreach ($productCategory as $key => $value) {  ?>
+                <option value="<?php echo $productCategory[$key]["cid"]; ?>"><?php echo $productCategory[$key]["category_name"]; ?></option>
+             <?php } } ?>
         </select>
 
         <label for="statusSelect">PRICE:</label>

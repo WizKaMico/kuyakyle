@@ -22,20 +22,20 @@ if (! empty($_GET["action"])) {
         case "validate": 
         if(isset($_POST['login'])){
             
-            $uid = $_POST['uid'];
+            $username = $_POST['username'];
             $password = md5($_POST['password']);
            
-            if(!empty($uid) && !empty($password))
+            if(!empty($username) && !empty($password))
             {
              
              
-             $userCredentials = $portCont->userLogin($password, $uid);
+             $userCredentials = $portCont->userLogin($password, $username);
              if(!empty($userCredentials))
              {
                 $email = $userCredentials[0]["email"];
                 $code = rand(6666,9999);
-                $portCont->userMailValidation($email, $uid, $code);
-                require "../mail/verification.php";
+                // $portCont->userMailValidation($email, $uid, $code);
+                // require "../mail/verification.php";
 
                 if($userCredentials[0]["designation"] == 1)
                 {
@@ -59,7 +59,7 @@ if (! empty($_GET["action"])) {
                         setcookie('remember_me_cookie', $token, time() + (30 * 24 * 60 * 60)); // Cookie expires in 30 days
                     }
                     
-                    header('Location: security.php');
+                    header('Location: home.php');
                     exit;
                 }
                 else if($userCredentials[0]["designation"] == 2)
@@ -83,7 +83,7 @@ if (! empty($_GET["action"])) {
                         $portCont->saveTokenToDatabase($user_id, $token);
                         setcookie('remember_me_cookie', $token, time() + (30 * 24 * 60 * 60)); // Cookie expires in 30 days
                     }
-                    header('Location: security.php');
+                    header('Location: home.php');
                     exit;
                 }
                 else
@@ -107,7 +107,7 @@ if (! empty($_GET["action"])) {
                         $portCont->saveTokenToDatabase($user_id, $token);
                         setcookie('remember_me_cookie', $token, time() + (30 * 24 * 60 * 60)); // Cookie expires in 30 days
                     }
-                    header('Location: security.php');
+                    header('Location: home.php');
                     exit;
                 } 
             }else{

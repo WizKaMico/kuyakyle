@@ -7,7 +7,7 @@
                   </center>
                   <br />
                   <center>
-                  <a href="?view=index" class="rounded-button" style="text-decoration:none; color:white;">NEW ORDER</a>
+                  <a href="?action=empty" class="rounded-button" style="text-decoration:none; color:white;">NEW ORDER</a>
                   </center>
                 </div>
             </div>

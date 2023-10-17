@@ -17,33 +17,43 @@
                <div class="content-with-shadow"  style="height: 600px; overflow: auto;">
                <h1 style="text-align:center;">CART 🛒</h1>
                <hr />
-                <table>
+               <div class="table-container">
+               <table>
                     <tr>
                         <th>ITEM</th>
                         <th>NAME</th>
                         <th>QTY</th>
                         <th>PRICE</th>
                     </tr>
-                    <?php if (! empty($cartItem)) { ?>
-                    <?php foreach ($cartItem as $item) { ?>
-                    <tr>
-                        <td><img src="<?php echo $item["image"]; ?>" style="width:10%;" /></td>
-                        <td><?php echo $item["name"]; ?></td>
-                        <td><?php echo $item["quantity"]; ?></td>
-                        <td><?php echo "₱".$item["price"]; ?></td>
-                    </tr>
-                    <?php } ?>
-                    <tr>
-                        <td colspan="4" style="text-align:right; margin-right:5px;"><b>AMOUNT TO PAY : ₱ <?php echo $item_price; ?></b></td>
-                    </tr>
-                   
-                    <?php }else{ ?>
-                    <tr>
-                        <td colspan="4" style="text-align:center;"><b>NO ITEM IN CART</b></td>
-                    </tr>    
+                    <?php if (!empty($cartItem)) { ?>
+                        <?php foreach ($cartItem as $item) { ?>
+                            <tr>
+                                <td><img src="login/<?php echo $item["image"]; ?>" style="width: 30%;" /></td>
+                                <td><?php echo $item["name"]; ?></td>
+                                <td>
+                                 <form method="POST" action="?view=checkout&queue=<?php echo $_GET['queue'] ?>&purpose=<?php echo $_GET['purpose']; ?>&action=UpdateSpecificCartItem">
+                                   <input type="hidden" name="cart_id" value="<?php echo $item["cart_id"];  ?>" />
+                                    <div class="quantity-container">
+                                        <button class="decrease-quantity" name="decrease">-</button>
+                                        <input type="number" class="quantity" name="quantity" value="<?php echo $item["quantity"]; ?>" style="border:none; width:10%; line-height: 30px; vertical-align: middle;  text-align: center;" readonly=""/>
+                                        <!-- <span class="quantity"><?php echo $item["quantity"]; ?></span> -->
+                                        <button class="increase-quantity" name="increase">+</button>
+                                    </div>
+                                 </form>
+                                </td>
+                                <td><?php echo "₱" . $item["price"]; ?></td>
+                            </tr>
+                        <?php } ?>
+                        <tr>
+                            <td colspan="4" style="text-align:right; margin-right:5px;"><b>AMOUNT TO PAY : ₱ <?php echo $item_price; ?></b></td>
+                        </tr>
+                    <?php } else { ?>
+                        <tr>
+                            <td colspan="4" style="text-align:center;"><b>NO ITEM IN CART</b></td>
+                        </tr>
                     <?php } ?>
                 </table>
-
+                </div>
                </div>
             </div>
             <div class="col-md-3">
@@ -64,26 +74,33 @@
         </div>
 
 
-        <style>
+          <style>
+                .table-container {
+                            overflow-x: auto;
+                            max-width: 100%;
+                        }
 
-table {
-                border-collapse: collapse;
-                border-spacing: 0;
-                width: 100%;
-                border: 1px solid #ddd;
-                
-                }
 
-                th {
-                    background:#eece32;
-                    color:white;
-                }
+                   table {
+                        border-collapse: collapse;
+                        border-spacing: 0;
+                        width: 100%;
+                        border: 1px solid #ddd;
+                        table-layout: fixed;
+                    }
 
-                th, td {
-                text-align: center;
-                padding: 8px;
+                    th {
+                        background: #eece32;
+                        color: white;
+                    }
 
-                }
+                    th, td {
+                        text-align: center;
+                        padding: 8px;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                    }
 
                 .rounded-input {
                     width: 100%;
@@ -94,6 +111,24 @@ table {
                     justify-content: center;
                     align-items: center;
                     display: flex;
+                }
+
+                .quantity-container {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .decrease-quantity,
+                .increase-quantity {
+                    /* padding: 15px 20px; */
+                    background-color: #d14c4c;
+                    width: 30px; /* Adjust the width as needed */
+                    border: none;
+                    color: white;
+                    border-radius: 20px; /* Increased border radius for more rounded edges */
+                    cursor: pointer;
+                    margin: 0 5px; 
                 }
 
                 .rounded-button {

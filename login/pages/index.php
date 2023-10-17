@@ -1,15 +1,16 @@
 
-<div class="row" style="margin-top:20px; display: flex; justify-content: center; align-items: center;">
+   <div class="row" style="margin-top:20px; display: flex; justify-content: center; align-items: center;">
         <div class="col-md-3">
             <div class="content-with-shadow" style="background-color:#eece32;">
-             <center>
-                <img src="../logo/logo.png" style="width:50%; display: flex; justify-content: center; align-items: center;" />
+                <center>
+                    <img src="../logo/logo.png" style="width:50%; display: flex; justify-content: center; align-items: center;" />
+                </center>
                 <br />
                 <br />
                 <form method="POST" action="index.php?action=validate">
 
                 <!-- Input field -->
-                <input type="text" name="uid" placeholder="UID" class="rounded-input">
+                <input type="text" name="username" placeholder="UserName" class="rounded-input">
 
 
                 <input type="password" name="password" placeholder="Password" class="rounded-input">
@@ -17,7 +18,6 @@
                 <button class="rounded-button" name="login">Login</button>
                 <a href="index.php?view=forgot" class="rounded-button" style="color:white; text-decoration:none; margin-top:10px;">Forgot Password</a>
                 <form>
-             </center>
             </div>
         </div>
     </div>

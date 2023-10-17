@@ -40,11 +40,15 @@
         <li class="label">Main</li>
         <?php if($userSession[0]["designation"] == 1){ ?>
         <li class="active"><i class="fas fa-columns"></i><a href="home.php?view=home" style="text-decoration:none; color:white;">Dashboard</a></li>
+        <li><i class="fas fa-columns"></i><a href="home.php?view=raw" style="text-decoration:none; color:white;">Raw Materials</a></li>
         <li><i class="fas fa-columns"></i><a href="home.php?view=sales" style="text-decoration:none; color:white;">Manage Sales</a></li>
         <li><i class="fas fa-columns"></i><a href="home.php?view=transaction" style="text-decoration:none; color:white;">Transaction History</a></li>
         <li><i class="fas fa-columns"></i><a href="home.php?view=product" style="text-decoration:none; color:white;">Product</a></li>
+        <li><i class="fas fa-columns"></i><a href="home.php?view=category" style="text-decoration:none; color:white;">Category</a></li>
+        <?php } else if($userSession[0]["designation"] == 2){ ?>
+        <li class="active"><i class="fas fa-columns"></i><a href="home.php?view=home" style="text-decoration:none; color:white;">Orders</a></li>
         <?php } else { ?>
-         <li class="active"><i class="fas fa-columns"></i><a href="home.php?view=home" style="text-decoration:none; color:white;">Orders</a></li>
+          <li class="active"><i class="fas fa-columns"></i><a href="home.php?view=home" style="text-decoration:none; color:white;">Orders</a></li>
         <?php } ?>
       </ul>
     </nav>
@@ -54,12 +58,18 @@
         <?php include('pages/home.php'); ?>
         <?php } else if($_GET['view'] == 'sales') { ?>
         <?php include('pages/sales.php'); ?>
+        <?php } else if($_GET['view'] == 'raw') { ?>
+        <?php include('pages/raw.php'); ?>
         <?php } else if($_GET['view'] == 'transaction') { ?>
         <?php include('pages/transaction.php'); ?>
         <?php } else if($_GET['view'] == 'product') { ?>
         <?php include('pages/product.php'); ?>
         <?php } else if($_GET['view'] == 'analytics') { ?>
         <?php include('pages/analytics.php'); ?>
+        <?php } else if($_GET['view'] == 'category') { ?>
+        <?php include('pages/category.php'); ?>
+        <?php } else if($_GET['view'] == 'addorder') { ?>
+        <?php include('pages/neworder.php'); ?>
         <?php } else {  ?>
         <?php include('pages/home.php'); ?>
         <?php } ?>     
@@ -86,8 +96,12 @@
   <script src="../js/home-admin-product.js"></script> 
   <script src="../js/product-admin-product.js"></script>
   <script src="../js/transaction-admin-transaction.js"></script>
- 
+  <script src="../js/home-admin-raw.js"></script>
+  <script src="../js/home-admin-raw-analytics.js"></script>
   <script src="../js/home-admin-pie.js"></script>
+  <script src="../js/category-admin-category.js"></script>
+  <script src="../js/category-admin-category-analytics.js"></script>
+ 
  
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -111,13 +125,91 @@
 
   </script>   
 
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get references to the button and modal
+      const CreateNewRawMaterialsButton = document.getElementById('CreateNewRawMaterialsButton');
+      const modal = document.getElementById('CreateNewProductRaw'); // Use the correct modal ID
+
+      // Add a click event listener to the button
+      CreateNewRawMaterialsButton.addEventListener('click', () => {
+        // Display the modal
+        modal.style.display = 'block';
+      });
+
+      // Add a click event listener to close the modal when clicking outside of it
+      window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    });
+
+  </script>   
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get references to the button and modal
+      const BindNewRawMaterialsButton = document.getElementById('BindNewRawMaterialsButton');
+      const modal = document.getElementById('BindNewProductRaw'); // Use the correct modal ID
+
+      // Add a click event listener to the button
+      BindNewRawMaterialsButton.addEventListener('click', () => {
+        // Display the modal
+        modal.style.display = 'block';
+      });
+
+      // Add a click event listener to close the modal when clicking outside of it
+      window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    });
+
+  </script>   
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Get references to the button and modal
+      const CreateNewCategoryButton = document.getElementById('CreateNewCategoryButton');
+      const modal = document.getElementById('CreateNewCategory'); // Use the correct modal ID
+
+      // Add a click event listener to the button
+      CreateNewCategoryButton.addEventListener('click', () => {
+        // Display the modal
+        modal.style.display = 'block';
+      });
+
+      // Add a click event listener to close the modal when clicking outside of it
+      window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+          modal.style.display = 'none';
+        }
+      });
+    });
+
+  </script>   
+
+ <?php include('modal/bind-new-raw_materials.php'); ?>
  <?php include('modal/create-new-product.php'); ?>
+ <?php include('modal/create-new-raw_materials.php'); ?>
  <?php include('modal/edit-new-product.php'); ?>
+ <?php include('modal/create-new-category.php'); ?>
+ <?php } else if($userSession[0]["designation"] == 2) { ?>
+
+  <?php include('modal/edit-new-order.php'); ?>
+  <script src="../js/home-cashier-sales.js"></script>
+  <script src="../js/cashier-tab.js"></script> 
 
   <?php } else { ?>
 
-  <?php include('modal/edit-new-order.php'); ?>
-  <script src="../js/home-cashier-sales.js"></script> 
+  <?php include('modal/edit-new-order-chef.php'); ?>
+  <script src="../js/home-chef-sales.js"></script>
+ 
+ 
   <?php } ?>
 </body>
 </html>

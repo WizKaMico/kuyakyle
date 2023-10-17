@@ -15,6 +15,7 @@
   <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.css">
   <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/cart.css">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   
 
@@ -34,6 +35,22 @@
     </div>
   </header>
   <div class="body">
+  <?php if(!empty($_GET['view'])) { ?>
+     <?php if($_GET['view'] == 'food') { ?>
+      <nav class="side-nav">
+          <ul>
+            <li class="label">Main</li>
+            <?php 
+            $category = $storeCart->categoryProduct(); 
+            if (!empty($category)) {
+                foreach ($category as $key => $value) {
+                    $activeClass = ($key === 0) ? 'active' : ''; // Add 'active' class to the first element
+            ?>
+                    <li class="<?php echo $activeClass; ?>"><i class="fas fa-columns"></i><a href="#" class="tablinks" onclick="openCategory(event, '<?php echo $category[$key]['cid']; ?>')" style="text-decoration:none; color:white;"><?php echo $category[$key]['category_name']; ?></a></li>
+            <?php } } ?>
+        </ul>          
+      </nav>
+    <?php } } ?> 
     <div class="content">
         <?php if(!empty($_GET['view'])) { ?>
         <?php if($_GET['view'] == 'index') { ?>
@@ -50,6 +67,19 @@
         <?php }else{ ?>
         <?php include('pages/index.php'); ?>
         <?php } ?>
+        
+
+   <?php if(!empty($_GET['view'])) { ?>
+     <?php if($_GET['view'] == 'food') { ?>   
+        <div id="cartCheck" class="cartCheck">
+          <i class="fas fa-shopping-cart icon" aria-hidden="true"></i>
+            <div class="col-md-12">
+            <form class="form" style="overflow: auto; max-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
+               <?php include('pages/cart.php'); ?>
+            </form>
+            </div>
+        </div>
+    <?php } } ?> 
     </div>
   </div>
 </div>
@@ -57,9 +87,30 @@
   <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js'></script>
   <script src="https://cdn.jsdelivr.net/npm/ag-grid-enterprise@30.0.6/dist/ag-grid-enterprise.min.js"></script>
   <script src="js/home-aggrid.js"></script>
+  <script  src="js/cart.js"></script>
   <script  src="js/main.js"></script>
   <script  src="js/tab.js"></script>
- 
+  <script>
+    $(document).ready(function () {
+        // Event listener for increasing quantity
+        $(".increase-quantity").on("click", function () {
+            var quantityElement = $(this).siblings(".quantity");
+            var currentQuantity = parseInt(quantityElement.text());
+            if (!isNaN(currentQuantity)) {
+                quantityElement.text(currentQuantity + 1);
+            }
+        });
+
+        // Event listener for decreasing quantity
+        $(".decrease-quantity").on("click", function () {
+            var quantityElement = $(this).siblings(".quantity");
+            var currentQuantity = parseInt(quantityElement.text());
+            if (!isNaN(currentQuantity) && currentQuantity > 1) {
+                quantityElement.text(currentQuantity - 1);
+            }
+        });
+    });
+</script>   
 
 </body>
 </html>

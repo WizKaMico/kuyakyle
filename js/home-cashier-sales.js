@@ -2,7 +2,7 @@
 // Initialize AG-Grid
 var gridOptions7 = {
     columnDefs: [
-      { headerName: 'QUEUE ID', field: 'customer_id' },
+      { headerName: 'QUEUE ID', field: 'customer_id', cellRenderer: queueIdLinkRenderer },
       { headerName: 'ORDER ID', field: 'member',  cellRenderer: orderLinkRenderer  },
       { headerName: 'AMOUNT', field: 'amount' },
       { headerName: 'CUSTOMER', field: 'name' },
@@ -11,9 +11,10 @@ var gridOptions7 = {
       {
         headerName: 'ORDER DETAILS',
         field: 'orderDetails',
+        autoHeight: true, // Allow content to wrap without expanding the column
         cellRenderer: 'agGroupCellRenderer',
         cellRendererParams: {
-          suppressCount: true,
+            suppressCount: true,
         },
       },
       // Add more header groups or columns as needed
@@ -38,6 +39,21 @@ var gridOptions7 = {
     rowData: [], // Initial empty data
     // Other AG-Grid configuration options
   };
+
+  function queueIdLinkRenderer(params) {
+    var customerId = params.value;
+    var link = document.createElement('a');
+    link.href = 'home.php?view=addorder&order_id=' + customerId;
+    link.textContent = customerId;
+
+    // Add a click event listener to open the link in a new tab
+    link.addEventListener('click', function (event) {
+        event.preventDefault();
+        window.open(link.href, '_blank');
+    });
+
+    return link;
+}
   
   function orderLinkRenderer(params) {
     var member = params.value;
@@ -76,7 +92,7 @@ var gridOptions7 = {
   });
   
   // Fetch data from the server and populate the grid
-  function fetchAndPopulateDataSalesCashier() {
+  function fetchAndPopulateDataSalesCashier8() {
     fetch('../api/get_sales_cashier_data.php') // Replace with your server-side endpoint
       .then(response => response.json())
       .then(data => {
@@ -99,6 +115,6 @@ var gridOptions7 = {
     new agGrid.Grid(gridDivSalesCashier, gridOptions7);
   
     // Fetch and populate data
-    fetchAndPopulateDataSalesCashier();
+    fetchAndPopulateDataSalesCashier8();
   });
   

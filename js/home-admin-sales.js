@@ -5,11 +5,11 @@ var gridOptions2 = {
       {
         headerName: 'ORDER DETAILS',
         children: [
-          { headerName: 'ORDER ID', field: 'customer_id' },
+          { headerName: 'ORDER ID', field: 'customer_id',suppressSizeToFit: true },
           { headerName: 'AMOUNT', field: 'amount' },
           { headerName: 'CUSTOMER', field: 'name' },
           { headerName: 'STATUS', field: 'order_status' },
-          { headerName: 'DATE', field: 'order_at' }
+          { headerName: 'DATE', field: 'DateSpecific', rowGroup: true }
         ],
       }
       
@@ -31,7 +31,7 @@ var gridOptions2 = {
 
 
 // Fetch data from the server and populate the grid
-function fetchAndPopulateDataSales() {
+function fetchAndPopulateDataSales5() {
     fetch('../api/get_sales_data.php') // Replace with your server-side endpoint
       .then(response => response.json())
       .then(data => {
@@ -51,5 +51,5 @@ function fetchAndPopulateDataSales() {
     new agGrid.Grid(gridDivSales, gridOptions2);
   
     // Fetch and populate data
-    fetchAndPopulateDataSales();
+    fetchAndPopulateDataSales5();
   });

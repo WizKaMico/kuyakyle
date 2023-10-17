@@ -6,7 +6,7 @@ class shopController extends DBController
 
     function getAllProduct()
     {
-        $query = "SELECT * FROM tbl_product";
+        $query = "SELECT * FROM tbl_product TP LEFT JOIN tbl_categorry TC ON TP.category = TC.cid";
         
         $productResult = $this->getDBResult($query);
         return $productResult;
@@ -43,7 +43,7 @@ class shopController extends DBController
         
         $params = array(
             array(
-                "param_type" => "i",
+                "param_type" => "s",
                 "param_value" => $member_id
             )
         );
@@ -77,7 +77,7 @@ class shopController extends DBController
                 "param_value" => $product_id
             ),
             array(
-                "param_type" => "i",
+                "param_type" => "s",
                 "param_value" => $member_id
             )
         );
@@ -100,7 +100,7 @@ class shopController extends DBController
                 "param_value" => $quantity
             ),
             array(
-                "param_type" => "i",
+                "param_type" => "s",
                 "param_value" => $member_id
             )
         );
@@ -146,7 +146,7 @@ class shopController extends DBController
         
         $params = array(
             array(
-                "param_type" => "i",
+                "param_type" => "s",
                 "param_value" => $member_id
             )
         );
@@ -160,7 +160,7 @@ class shopController extends DBController
         
         $params = array(
             array(
-                "param_type" => "i",
+                "param_type" => "s",
                 "param_value" => $member_id
             ),
             array(
@@ -254,9 +254,9 @@ class shopController extends DBController
         $this->updateDB($query, $params);
     }
 
-    function userLogin($password, $uid)
+    function userLogin($password, $username)
     {
-        $query = "SELECT * FROM tbl_users TU LEFT JOIN tbl_designation D ON TU.designation = D.id WHERE TU.password = ? AND TU.uid = ?";
+        $query = "SELECT * FROM tbl_users TU LEFT JOIN tbl_designation D ON TU.designation = D.id WHERE TU.password = ? AND TU.username = ?";
 
         $params = array(
             
@@ -265,7 +265,7 @@ class shopController extends DBController
                 "param_value" => $password
             ),array(
                 "param_type" => "s",
-                "param_value" => $uid
+                "param_value" => $username
             )
         );
         
@@ -407,7 +407,14 @@ class shopController extends DBController
 
     function allSalesList()
     {
-        $query = "SELECT * FROM tbl_order";
+
+        // { headerName: 'ORDER ID', field: 'customer_id',suppressSizeToFit: true },
+        // { headerName: 'AMOUNT', field: 'amount' },
+        // { headerName: 'CUSTOMER', field: 'name' },
+        // { headerName: 'STATUS', field: 'order_status' },
+        // { headerName: 'DATE', field: 'order_at' }
+
+        $query = "SELECT T.customer_id, T.amount, T.name, T.order_status, DATE(T.order_at) as DateSpecific FROM tbl_order T ";
         
         $productResult = $this->getDBResult($query);
         return $productResult;
@@ -533,6 +540,23 @@ class shopController extends DBController
         $this->updateDB($query, $params);
     }
 
+    function updateOrderStatChef($status, $order_id)
+    {
+        $query = "UPDATE tbl_order SET order_status = ? WHERE customer_id = ?";
+
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $status
+            ),array(
+                "param_type" => "s",
+                "param_value" => $order_id
+            )
+        );
+        
+        $this->updateDB($query, $params);
+    }
+
     function getProductStat($codeArray)
     {
         // Create a comma-separated list of placeholders for the codes
@@ -569,8 +593,337 @@ class shopController extends DBController
         return $statSpecificResult;
     
     }
+
+
+    function addInventoryProduct($material,$quantity)
+    {
+        $query = "INSERT INTO tbl_raw_material (material, quantity, date_added) VALUES (?,?,?)"; 
+
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $material
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $quantity
+            ),
+            array(
+                "param_type" => "s",
+                "param_value" => date('Y-m-d')
+            )
+        );
+
+        $this->insertDB($query, $params);
+    }
     
 
- 
+    function inventoryProduct()
+    {
+        $query = "SELECT * FROM tbl_raw_material";
+        
+        $productInventoryResult = $this->getDBResult($query);
+        return $productInventoryResult;
+    }
+
+    function bindInventoryProduct($rid,$product_id,$unit,$quantity)
+    {
+        $query = "INSERT INTO tbl_raw_binded_product (rid, product_id, unit, quantity) VALUES (?,?,?,?)"; 
+
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $rid
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $product_id
+            ),
+            array(
+                "param_type" => "s",
+                "param_value" => $unit
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $quantity
+            )
+        );
+
+        $this->insertDB($query, $params);
+
+    }
+
+
+    function inventoryAnalyticsProduct()
+    {
+        $query = "SELECT TP.name,
+        TRM.material,
+        TBP.unit,
+        TBP.quantity AS quantitytoprepare,
+        TRM.quantity AS quantityinstock,
+        SUM(TOI.quantity) AS UnitOrder,
+        (TRM.quantity - (TBP.quantity * SUM(TOI.quantity))) AS actualquantityinstock
+        FROM tbl_product TP
+        LEFT JOIN tbl_raw_binded_product TBP ON TP.id = TBP.product_id
+        LEFT JOIN tbl_raw_material TRM ON TBP.rid = TRM.rid
+        LEFT JOIN tbl_order_item TOI ON TP.id = TOI.product_id
+        GROUP BY TP.name, TRM.material, TBP.unit, TBP.quantity, TRM.quantity";
+        
+        $productInventoryProductResult = $this->getDBResult($query);
+        return $productInventoryProductResult;
+    }
+
+
+    // function getInventoryAnalyticsProduct($codeArray)
+    // {
+    //     // Create a comma-separated list of placeholders for the codes
+    //     $placeholders = implode(",", array_fill(0, count($codeArray), "?"));
+        
+    //     // $query = "SELECT * FROM tbl_product tp LEFT JOIN tbl_order_item ti ON tp.id = ti.product_id WHERE tp.code IN ($placeholders)";
+    //     $query = "SELECT TP.name,
+    //     TRM.material,
+    //     TBP.unit,
+    //     TBP.quantity AS quantitytoprepare,
+    //     TRM.quantity AS quantityinstock,
+    //     SUM(TOI.quantity) AS UnitOrder,
+    //     (TRM.quantity - (TBP.quantity * SUM(TOI.quantity))) AS actualquantityinstock
+    //     FROM tbl_product TP
+    //     LEFT JOIN tbl_raw_binded_product TBP ON TP.id = TBP.product_id
+    //     LEFT JOIN tbl_raw_material TRM ON TBP.rid = TRM.rid
+    //     LEFT JOIN tbl_order_item TOI ON TP.id = TOI.product_id
+    //     WHERE TP.code IN ($placeholders)
+    //     GROUP BY TP.name, TRM.material, TBP.unit, TBP.quantity, TRM.quantity";
+    //     $params = array();
+        
+    //     foreach ($codeArray as $code) {
+    //         $params[] = array(
+    //             "param_type" => "s",
+    //             "param_value" => $code
+    //         );
+    //     }
+        
+    //     $statInventoryResult = $this->getDBResult($query, $params);
+    //     return $statInventoryResult;
+    // }
+
+
+    function getInventoryAnalyticsProduct($rcode)
+    {
+        $query = "SELECT TP.name,
+        TRM.material,
+        TBP.unit,
+        TBP.quantity AS quantitytoprepare,
+        TRM.quantity AS quantityinstock,
+        SUM(TOI.quantity) AS UnitOrder,
+        (TRM.quantity - (TBP.quantity * SUM(TOI.quantity))) AS actualquantityinstock
+        FROM tbl_product TP
+        LEFT JOIN tbl_raw_binded_product TBP ON TP.id = TBP.product_id
+        LEFT JOIN tbl_raw_material TRM ON TBP.rid = TRM.rid
+        LEFT JOIN tbl_order_item TOI ON TP.id = TOI.product_id
+        WHERE TP.code = ?
+        GROUP BY TP.name, TRM.material, TBP.unit, TBP.quantity, TRM.quantity";
+    
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $rcode
+            )
+        );
+    
+        $statSpecificResult = $this->getDBResult($query, $params);
+        return $statSpecificResult;
+    
+    }
+
+
+    function checkCategory($category)
+    {
+        $query = "SELECT * FROM tbl_categorry WHERE category_name = ?"; 
+
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $category
+            )
+        );
+    
+        $categorySpecificResult = $this->getDBResult($query, $params);
+        return $categorySpecificResult;
+
+    }
+
+    function checkCategoryNumber($category)
+    {
+        $query = "SELECT * FROM tbl_categorry WHERE cid = ?"; 
+
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $category
+            )
+        );
+    
+        $categorySpecificResult = $this->getDBResult($query, $params);
+        return $categorySpecificResult;
+
+    }
+
+    function addCategory($category)
+    {
+        $query = "INSERT INTO tbl_categorry (category_name) VALUES (?)"; 
+
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $category
+            )
+        );
+
+        $this->insertDB($query, $params);
+    }
+
+    function categoryProduct()
+    {
+        $query = "SELECT * FROM tbl_categorry";
+        
+        $productCategoryProductResult = $this->getDBResult($query);
+        return $productCategoryProductResult;       
+    }
+
+    function getProductByCid($cid)
+    {
+        $query = "SELECT * FROM tbl_product WHERE category = ? AND status != 'OUT STOCK'";
+
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $cid
+            )
+        );
+    
+        $categorySpecificProductResult = $this->getDBResult($query, $params);
+        return $categorySpecificProductResult;
+   
+    }
+
+    function orderItem($order, $product_id)
+    {
+        $query = "SELECT * FROM tbl_order_item WHERE order_id = ? AND product_id = ?";
+
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $order
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $product_id
+            )
+        );
+    
+        $specificProductResult = $this->getDBResult($query, $params);
+        return $specificProductResult;
+    }
+
+    function updateOrderChange($quantityUpdate, $order, $product_id) {
+        $query = "UPDATE tbl_order_item SET quantity = ? WHERE order_id = ? AND product_id = ?";
+        
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $quantityUpdate
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $order
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $product_id
+            )
+        );
+        
+        $this->updateDB($query, $params);
+    }
+
+    function customerOrderDetails($order){
+        $query = "SELECT * FROM tbl_order WHERE id = ?"; 
+
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $order
+            )
+        );
+    
+        $resultOrderExistenceResult = $this->getDBResult($query, $params);
+        return $resultOrderExistenceResult;
+    }
+
+
+    function updateCustomerOrderDetails($order, $newSum)
+    {
+        $query = "UPDATE tbl_order SET amount = ? WHERE id = ?";
+        
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $newSum
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $order
+            )
+        );
+        
+        $this->updateDB($query, $params);
+    }
+    
+    function getOrderItemsByOrderId($order)
+    {
+        $query = "SELECT *,TP.name as product_name FROM tbl_order_item TOI LEFT JOIN tbl_product TP ON TOI.product_id = TP.id LEFT JOIN tbl_order T ON TOI.order_id = T.id WHERE TOI.order_id =  ?"; 
+
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $order
+            )
+        );
+    
+        $resultOrderExistenceResult = $this->getDBResult($query, $params);
+        return $resultOrderExistenceResult;
+    }
+
+    function updateCartItemCheckQuantity($cart_id, $quantity)
+    {
+        $query = "UPDATE tbl_cart SET quantity = ? WHERE id = ?";
+        
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $quantity
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $cart_id
+            )
+        );
+        
+        $this->updateDB($query, $params);
+    }
+
+    function deleteCartItemCheckQuantity($cart_id)
+    {
+        $query = "DELETE FROM tbl_cart WHERE id = ?";
+        
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $cart_id
+            )
+        );
+        
+        $this->updateDB($query, $params); 
+    }
 
 }

@@ -18,12 +18,12 @@ var gridOptions4 = {
                   field: 'image',
                   cellRenderer: function (params) {
                       // Customize this function to render your image
-                      return `<img src="../${params.value}" alt="Product Image" style="max-width: 50px; max-height: 50px;" />`;
+                      return `<img src="${params.value}" alt="Product Image" style="max-width: 50px; max-height: 50px;" />`;
                   },
               },
               { headerName: 'CODE', field: 'code', cellRenderer: codeLinkRenderer },
               { headerName: 'NAME', field: 'name' },
-              { headerName: 'CATEGORY', field: 'category' },
+              { headerName: 'CATEGORY', field: 'category_name' },
               { headerName: 'PRICE', field: 'price' },
               { headerName: 'STATUS', field: 'status' },
           ],

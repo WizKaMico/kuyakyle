@@ -11,7 +11,7 @@ class DBController
 
     private $database = "kyle";
 
-    private static $conn;
+    private  $conn;
 
     function __construct()
     {

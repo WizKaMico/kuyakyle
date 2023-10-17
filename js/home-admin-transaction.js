@@ -29,7 +29,7 @@ var gridOptions1 = {
 
 
 // Fetch data from the server and populate the grid
-function fetchAndPopulateDataTransaction() {
+function fetchAndPopulateDataTransaction6() {
     fetch('../api/get_transaction_data.php') // Replace with your server-side endpoint
       .then(response => response.json())
       .then(data => {
@@ -49,5 +49,5 @@ function fetchAndPopulateDataTransaction() {
     new agGrid.Grid(gridDivTransaction, gridOptions1);
   
     // Fetch and populate data
-    fetchAndPopulateDataTransaction();
+    fetchAndPopulateDataTransaction6();
   });

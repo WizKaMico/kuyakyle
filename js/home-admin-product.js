@@ -6,7 +6,7 @@ var gridOptions3 = {
         headerName: 'PRODUCT INFORMATION',
         children: [
           { headerName: 'NAME', field: 'name' },
-          { headerName: 'CATEGORY', field: 'category' },
+          { headerName: 'CATEGORY', field: 'category_name' },
           { headerName: 'PRICE', field: 'price' }
         ],
       }
@@ -29,7 +29,7 @@ var gridOptions3 = {
 
 
 // Fetch data from the server and populate the grid
-function fetchAndPopulateDataProduct() {
+function fetchAndPopulateDataProduct2() {
     fetch('../api/get_product_data.php') // Replace with your server-side endpoint
       .then(response => response.json())
       .then(data => {
@@ -49,5 +49,5 @@ function fetchAndPopulateDataProduct() {
     new agGrid.Grid(gridDivProduct, gridOptions3);
   
     // Fetch and populate data
-    fetchAndPopulateDataProduct();
+    fetchAndPopulateDataProduct2();
   });

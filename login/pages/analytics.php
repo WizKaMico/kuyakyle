@@ -1,7 +1,8 @@
 <div class="row" style="margin-top: 20px;">
     <div class="col-md-12">
         <div class="content-with-shadow">
-            <h1>HI! <?php echo strtoupper($userSession[0]["email"]); ?></h1>
+              <h1>HI! <?php echo strtoupper($userSession[0]["fullname"]); ?></h1>
+              <p>EMAIL :  <?php echo strtoupper($userSession[0]["email"]); ?> || CONTACT : <?php echo strtoupper($userSession[0]["contact"]); ?></p>
         </div>
     </div>
 </div>
@@ -23,7 +24,7 @@
             // Your code to display product information here
     ?>
 
-    <div class="col-md-3">
+    <div class="col-md-6">
         <div class="content-with-shadow">
             <h5><?php echo $stat[$key]["code"]; ?> | PROFIT :
                 <?php
@@ -69,6 +70,55 @@
                 </table>
             </div>
         </div>
+    </div>
+    
+
+    <?php }
+    } ?>
+        <?php 
+        $stat = $portCont->getProductStat($codes);
+
+        if (!empty($stat)) {
+            foreach ($stat as $key => $value) {
+        ?>
+
+    <div class="col-md-6">
+      <div class="content-with-shadow">
+          <h5>PRODUCT INGREDIENTS</h5>
+          <hr />
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Material</th>
+                            <th>Unit</th>
+                            <th>Qty. To Prepare</th>
+                            <th>Qty. Stock</th>
+                            <th>Order</th>
+                            <th>Qty. Actual</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php
+                        $rcode = $stat[$key]["code"];
+                        $spsIngredient = $portCont->getInventoryAnalyticsProduct($rcode);
+                        if (!empty($spsIngredient)) {
+                            foreach ($spsIngredient as $key => $value) {
+                        ?>
+                        <tr>
+                            <td><?php echo $spsIngredient[$key]["material"]; ?></td>
+                            <td><?php echo $spsIngredient[$key]["unit"]; ?></td>
+                            <td><?php echo $spsIngredient[$key]["quantitytoprepare"]; ?></td>
+                            <td><?php echo $spsIngredient[$key]["quantityinstock"]; ?></td>
+                            <td><?php echo $spsIngredient[$key]["UnitOrder"]; ?></td>
+                            <td><?php echo $spsIngredient[$key]["actualquantityinstock"]; ?></td>
+                        </tr>
+                        <?php }
+                        } ?>
+                    </tbody>
+                </table>
+            </div>
+      </div>
     </div>
 
     <?php }
