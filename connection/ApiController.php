@@ -429,6 +429,7 @@ class shopController extends DBController
             O.amount,
             O.name,
             O.order_status,
+            O.payments,
             DATE(O.order_at) AS order_at,
             GROUP_CONCAT(
                 CONCAT(P.code, ' - Price: ', I.item_price, ' - Quantity: ', I.quantity)
@@ -439,7 +440,7 @@ class shopController extends DBController
         LEFT JOIN tbl_order_item I ON O.id = I.order_id
         LEFT JOIN tbl_product P ON I.product_id = P.id
         WHERE DATE(O.order_at) = CURDATE()
-        GROUP BY O.id, O.customer_id, O.amount, O.name, O.order_status, DATE(O.order_at)";
+        GROUP BY O.id, O.customer_id, O.amount, O.name, O.order_status,  O.payments, DATE(O.order_at)";
 
         $productResult = $this->getDBResult($query);
         return $productResult;
@@ -462,7 +463,7 @@ class shopController extends DBController
     FROM tbl_order O
     LEFT JOIN tbl_order_item I ON O.id = I.order_id
     LEFT JOIN tbl_product P ON I.product_id = P.id
-    WHERE DATE(O.order_at) = CURDATE()
+    WHERE DATE(O.order_at) = CURDATE() AND O.order_status != 'COMPLETED'
     GROUP BY O.id, O.customer_id, O.amount, O.name, O.order_status, DATE(O.order_at)";
 
     $productResult = $this->getDBResult($query);

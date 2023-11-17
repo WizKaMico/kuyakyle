@@ -6,6 +6,7 @@ var gridOptions7 = {
       { headerName: 'ORDER ID', field: 'member',  cellRenderer: orderLinkRenderer  },
       { headerName: 'AMOUNT', field: 'amount' },
       { headerName: 'CUSTOMER', field: 'name' },
+      { headerName: 'PAYMENT STATUS', field: 'payments' },
       { headerName: 'STATUS', field: 'order_status' },
       { headerName: 'DATE', field: 'order_at' },
       {

@@ -4,6 +4,7 @@ var gridOptions31 = {
     columnDefs: [
       { headerName: 'QUEUE ID', field: 'customer_id', cellRenderer: queueIdLinkRenderer },
       // { headerName: 'ORDER ID', field: 'member',  cellRenderer: orderLinkRenderer  },
+      { headerName: 'AMOUNT', field: 'amount'},
       { headerName: 'ORDER ID', field: 'member'},
       { headerName: 'STATUS', field: 'order_status',  cellRenderer: orderLinkRendererForStatus },
       { headerName: 'DATE', field: 'order_at' },
