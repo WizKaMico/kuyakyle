@@ -3,18 +3,24 @@
 var gridOptions31 = {
     columnDefs: [
       { headerName: 'QUEUE ID', field: 'customer_id', cellRenderer: queueIdLinkRenderer },
-      { headerName: 'ORDER ID', field: 'member',  cellRenderer: orderLinkRenderer  },
-      { headerName: 'STATUS', field: 'order_status' },
+      // { headerName: 'ORDER ID', field: 'member',  cellRenderer: orderLinkRenderer  },
+      { headerName: 'ORDER ID', field: 'member'},
+      { headerName: 'STATUS', field: 'order_status',  cellRenderer: orderLinkRendererForStatus },
       { headerName: 'DATE', field: 'order_at' },
       {
         headerName: 'ORDER DETAILS',
         field: 'orderDetails',
-        autoHeight: true, // Allow content to wrap without expanding the column
-        cellRenderer: 'agGroupCellRenderer',
-        cellRendererParams: {
-            suppressCount: true,
+        autoHeight: true,
+        cellRenderer: function(params) {
+          var orderDetails = params.value;
+          if (Array.isArray(orderDetails)) {
+            return orderDetails.map(detail => detail.replace(/,/g, '<br>')).join('');
+          } else {
+            return orderDetails.replace(/,/g, '<br>');
+          }
         },
-      },
+        cellStyle: { 'white-space': 'normal', 'line-height': '1.2' },
+      },      
       // Add more header groups or columns as needed
     ],
     defaultColDef: {
@@ -52,21 +58,40 @@ var gridOptions31 = {
 
     return link;
 }
+
+
+function orderLinkRendererForStatus(params) {
+  var status = params.value;
+  var orderId = params.data.member; // Assuming 'member' is the field containing the order ID
+
+  var link = document.createElement('a');
+  link.href = '#';
+  link.textContent = status;
+
+  // Add a click event listener to open the modal with the order ID
+  link.addEventListener('click', function(event) {
+    event.preventDefault();
+    openModal(orderId); // Open the modal with the ORDER ID value
+  });
+
+  return link;
+}
   
-  function orderLinkRenderer(params) {
-    var member = params.value;
-    var link = document.createElement('a');
-    link.href = '#'; // Use "#" as the href to prevent default link behavior
-    link.textContent = member;
+  // function orderLinkRenderer(params) {
+  //   var member = params.value;
+  //   console.log(member)
+  //   var link = document.createElement('a');
+  //   link.href = '#'; // Use "#" as the href to prevent default link behavior
+  //   link.textContent = member;
   
-    // Add a click event listener to open the modal
-    link.addEventListener('click', function(event) {
-      event.preventDefault(); // Prevent default link behavior
-      openModal(member); // Open the modal with the specified UID
-    });
+  //   // Add a click event listener to open the modal
+  //   link.addEventListener('click', function(event) {
+  //     event.preventDefault(); // Prevent default link behavior
+  //     openModal(member); // Open the modal with the specified UID
+  //   });
   
-    return link;
-  }
+  //   return link;
+  // }
   
   // Custom cell renderer for the "Edit" link
   
@@ -91,7 +116,7 @@ var gridOptions31 = {
   
   // Fetch data from the server and populate the grid
   function fetchAndPopulateDataSalesChef8() {
-    fetch('../api/get_sales_cashier_data.php') // Replace with your server-side endpoint
+    fetch('../api/get_sales_chef_data.php') // Replace with your server-side endpoint
       .then(response => response.json())
       .then(data => {
         // Add the productDetails field to each row with an empty array for now

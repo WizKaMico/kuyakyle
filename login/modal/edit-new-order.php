@@ -18,17 +18,42 @@
         <option value="PAID">PAID</option>
       </select>
 
+      <label for="statusSelect">AMOUNT TO PAY:</label>
+      <input type="text" id="amountInput" name="change" readonly=""/>
+
       <label for="statusSelect">AMOUNT RECIEVED:</label>
-      <input type="number" id="statusSelect" name="amount" />
+      <input type="number" id="amountToPay" name="amount" />
 
       <label for="statusSelect">CHANGE:</label>
-      <input type="number" id="statusSelect" name="change" />
+      <input type="number" id="changeInput" name="change" />
 
       <button type="submit" name="proceed">UPDATE</button>
     </form>
   </div>
 </div>
 
+<script>
+
+document.addEventListener('DOMContentLoaded', function() {
+  var amountReceivedInput = document.getElementById('statusSelect');
+  var amountToPayInput = document.getElementById('amountInput');
+  var changeInput = document.getElementsByName('change')[1]; // Assuming the second input with name 'change'
+
+  amountReceivedInput.addEventListener('input', function() {
+    var amountReceived = parseFloat(amountReceivedInput.value);
+    var amountToPay = parseFloat(amountToPayInput.value);
+
+    if (!isNaN(amountReceived) && !isNaN(amountToPay)) {
+      var change = amountReceived - amountToPay;
+      changeInput.value = (change >= 0) ? change : 0; // Ensure change is positive
+    } else {
+      changeInput.value = ''; // Reset the change field if inputs are invalid
+    }
+  });
+});
+
+
+</script>
 
 <style>
 

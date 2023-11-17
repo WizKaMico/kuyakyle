@@ -58,6 +58,8 @@
             <div class="table-container">
             <a href="print_pdf.php?order_id=<?php echo $_GET['order_id']; ?>"  class="rounded-button"><span class="glyphicon glyphicon-print"></span> &nbsp; RECIEPT</a>
             <hr />
+            <a href="OR/?order_id=<?php echo $_GET['order_id']; ?>&cashier=<?php echo strtoupper($userSession[0]["fullname"]); ?>" target="_BLANK" class="rounded-button"><span class="glyphicon glyphicon-print"></span> &nbsp; NEW OR</a>
+            <hr />
                <table>
                     
                     <tr>

@@ -57,14 +57,16 @@ var gridOptions7 = {
   
   function orderLinkRenderer(params) {
     var member = params.value;
+    var amount = params.data.amount;
+    console.log(params.value)
     var link = document.createElement('a');
     link.href = '#'; // Use "#" as the href to prevent default link behavior
-    link.textContent = member;
+    link.textContent = member + ' - Amount: ' + amount;
   
     // Add a click event listener to open the modal
     link.addEventListener('click', function(event) {
       event.preventDefault(); // Prevent default link behavior
-      openModal(member); // Open the modal with the specified UID
+      openModal(member, amount); // Open the modal with the specified UID
     });
   
     return link;
@@ -72,16 +74,31 @@ var gridOptions7 = {
   
   // Custom cell renderer for the "Edit" link
   
-  function openModal(member) {
+  // function openModal(member) {
+  //   // Display the modal
+  //   console.log(member)
+  //   var modal = document.getElementById('orderModalUpdate');
+  //   modal.style.display = 'block';
+  
+  //   // Populate the modal content using the UID
+  //   const orderInput = modal.querySelector('#orderInput');
+  //   orderInput.value = member;
+  // }
+
+  function openModal(member, amount) {
     // Display the modal
-    console.log(member)
+    console.log(member);
+    console.log(amount); // You can use the amount value in your modal logic if needed
     var modal = document.getElementById('orderModalUpdate');
     modal.style.display = 'block';
   
-    // Populate the modal content using the UID
+    // Populate the modal content using the member and amount
     const orderInput = modal.querySelector('#orderInput');
+    const amountInput = modal.querySelector('#amountInput'); // Assuming you have an amount input field in your modal
     orderInput.value = member;
+    amountInput.value = amount; // Populate amount if needed
   }
+  
   
   // Close the modal when clicking outside the modal content
   window.addEventListener('click', function(event) {

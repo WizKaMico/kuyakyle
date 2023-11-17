@@ -9,7 +9,8 @@
                     <?php if (! empty($cartItem)) { ?>
                     <?php foreach ($cartItem as $item) { ?>
                     <tr>
-                        <td><img src="login/<?php echo $item["image"]; ?>" style="width:20%;" /></td>
+                        <!-- <td><img src="login/<?php echo $item["image"]; ?>" style="width:20%;" /></td> -->
+                        <td><?php echo $item["name"]; ?></td>
                         <td><?php echo $item["quantity"]; ?></td>
                         <td><?php echo "₱".$item["price"]; ?></td>
                         <td>

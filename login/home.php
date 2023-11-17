@@ -200,6 +200,27 @@
  <?php include('modal/create-new-category.php'); ?>
  <?php } else if($userSession[0]["designation"] == 2) { ?>
 
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function() {
+    var amountReceivedInput = document.getElementById('amountToPay');
+    var amountToPayInput = document.getElementById('amountInput');
+    var changeInput = document.getElementsByName('change')[1]; // Assuming the second input with name 'change'
+
+    amountReceivedInput.addEventListener('input', function() {
+      var amountReceived = parseFloat(amountReceivedInput.value);
+      var amountToPay = parseFloat(amountToPayInput.value);
+
+      if (!isNaN(amountReceived) && !isNaN(amountToPay)) {
+        var change = amountReceived - amountToPay;
+        changeInput.value = (change >= 0) ? change : 0; // Ensure change is positive
+      } else {
+        changeInput.value = ''; // Reset the change field if inputs are invalid
+      }
+    });
+  });
+</script>
+
   <?php include('modal/edit-new-order.php'); ?>
   <script src="../js/home-cashier-sales.js"></script>
   <script src="../js/cashier-tab.js"></script> 

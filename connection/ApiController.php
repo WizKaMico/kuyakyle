@@ -445,6 +445,30 @@ class shopController extends DBController
         return $productResult;
     }
 
+    function allSalesChefTodayList()
+    {
+        $query = "SELECT
+        O.id AS customer_id,
+        O.customer_id AS member,
+        O.amount,
+        O.name,
+        O.order_status,
+        DATE(O.order_at) AS order_at,
+        GROUP_CONCAT(
+            CONCAT(P.name, ' - Price: ', I.item_price, ' - Quantity: ', I.quantity)
+            ORDER BY I.id
+            SEPARATOR ', '
+        ) AS orderDetails
+    FROM tbl_order O
+    LEFT JOIN tbl_order_item I ON O.id = I.order_id
+    LEFT JOIN tbl_product P ON I.product_id = P.id
+    WHERE DATE(O.order_at) = CURDATE()
+    GROUP BY O.id, O.customer_id, O.amount, O.name, O.order_status, DATE(O.order_at)";
+
+    $productResult = $this->getDBResult($query);
+    return $productResult;
+    }
+
     function allTransactionListTake()
     {
         $query = "SELECT *
@@ -844,6 +868,22 @@ class shopController extends DBController
         );
         
         $this->updateDB($query, $params);
+    }
+
+    function myOrderDetails($order)
+    {
+        $query = "SELECT * FROM tbl_order WHERE id = ?";
+
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $order
+            )
+        );
+    
+        $resultOrderExistenceResult = $this->getDBResult($query, $params);
+        return $resultOrderExistenceResult;
+
     }
 
     function customerOrderDetails($order){
