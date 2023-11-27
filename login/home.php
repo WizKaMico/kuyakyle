@@ -17,6 +17,7 @@
   <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.9.0/fullcalendar.min.css'>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <link rel="stylesheet" href="../css/main.css">
+  <link rel='stylesheet' href='https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css'>
 
 
 </head>
@@ -101,6 +102,35 @@
   <script src="../js/home-admin-pie.js"></script>
   <script src="../js/category-admin-category.js"></script>
   <script src="../js/category-admin-category-analytics.js"></script>
+  <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>   
+            <script src='https://code.jquery.com/jquery-3.3.1.js'></script>
+            <script src='https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js'></script>
+            <script src='https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js'></script>
+            <script>
+                $(document).ready(function(){
+                    // Function to initialize DataTable and hide alert
+                    function initializeDataTable(tableId) {
+                      $(tableId).DataTable({
+                            "order": [[0, "desc"]] // Set initial sorting order (column 0, descending)
+                        });
+
+                        // Hide alert on close button click
+                        $(document).on('click', '.close', function(){
+                            $('.alert').hide();
+                        });
+                    }
+
+                 
+
+                    // Initialize DataTables for different tables
+                    initializeDataTable('#mySales');
+                    initializeDataTable('#mySalesDaily');
+                    initializeDataTable('#mySalesWeekly');
+                    initializeDataTable('#mySalesMonthly');
+                    initializeDataTable('#mySalesMProduct');
+                });
+            </script>
  
  
   <script>
@@ -191,7 +221,23 @@
       });
     });
 
-  </script>   
+  </script> 
+  
+  <script>
+function openCity(evt, cityName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+</script>
 
  <?php include('modal/bind-new-raw_materials.php'); ?>
  <?php include('modal/create-new-product.php'); ?>

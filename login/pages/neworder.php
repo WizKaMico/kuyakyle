@@ -36,7 +36,7 @@
                         foreach ($product as $key => $value) {
                     ?>
                      <form method="post" action="?view=addorder&order_id=<?php echo $_GET["order_id"]; ?>&action=add">
-                     <div class="col-md-3">
+                     <div class="col-md-3" style="margin-bottom:20px;">
                         <div class="content-with-shadow" style="background-repeat: no-repeat; background-color: black;"> 
                             <img src="<?php echo $product[$key]["image"]; ?>" style="width:100%;">
                             <hr />
@@ -77,7 +77,7 @@
                         <td><?php echo $item["quantity"]; ?></td>
                         <td><?php echo "₱".$item["price"]; ?></td>
                         <td>
-                            <a href="?view=food&queue=<?php echo $_GET["queue"]; ?>&purpose=<?php echo $_GET["purpose"]; ?>&action=remove&id=<?php echo $item["cart_id"]; ?>"
+                            <a href="?view=addorder&action=remove&id=<?php echo $item["myorderid"]; ?>&order_id=<?php echo $order; ?>"
                             class="btnRemoveAction"><img
                             src="../product/cart/Exit.png" alt="icon-delete"
                             title="Remove Item" /></a>

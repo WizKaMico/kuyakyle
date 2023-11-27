@@ -5,15 +5,15 @@
   <h2>ORDER STATUS</h2>
     <form id="statusForm" method="POST" action="home.php?chef=updateOrders">
     <input type="hidden" id="orderInput" name="order_id" readonly>
-      <label for="statusSelect">Select Status:</label>
+      <!-- <label for="statusSelect">Select Status:</label>
       <select id="statusSelect" name="status">
         <option value="PENDING">PENDING</option>
         <option value="IN-PROGRESS">IN-PROGRESS</option>
         <option value="COMPLETED">COMPLETED</option>
         <option value="CLAIMED">CLAIMED</option>
-      </select>
-
-      <button type="submit" name="proceed">UPDATE</button>
+      </select> -->
+      <input type="hidden" name="status" value="READY TO SERVE" reaonly=""/>
+      <button type="submit" name="proceed">READY TO SERVE</button>
     </form>
   </div>
 </div>

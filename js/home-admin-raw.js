@@ -8,6 +8,7 @@ var gridOptions13 = {
           { headerName: 'RID', field: 'rid' },
           { headerName: 'MATERIAL', field: 'material' },
           { headerName: 'QUANTITY', field: 'quantity' },
+          { headerName: 'PRICE/QTY', field: 'price' },
           { headerName: 'DATE ADDED', field: 'date_added' }
         ],
       }

@@ -27,6 +27,33 @@ if(!empty($_GET["cashier"])) {
                 }
             }
           break;
+
+        case "updateOrdersDiscount":
+            if(isset($_POST['proceed']))
+            {
+                $order_id = $_POST['order_id'];
+                $discount = $_POST['discount'];
+                $discount_number = $_POST['discount_number'];
+
+                if(!empty($order_id) && !empty($discount) && !empty($discount_number))
+                {
+                    $discount_percentage = 0.20;
+                    $toBeDiscountOf = $discount_percentage * $discount_number;
+                    $checkOrder =  $portCont->checkOrderTobeDiscounted($order_id); 
+                    if(!empty($checkOrder)){
+                        $actualAmount = $checkOrder[0]['item_price'] * $toBeDiscountOf;
+                        $actualAmountToPay = $checkOrder[0]['amount'] - $actualAmount;
+                        $original_price = $checkOrder[0]['amount'];
+                        $portCont->insertOrderDiscount($order_id, $discount, $discount_number, $actualAmount, $original_price);
+                        $portCont->updateOrderDiscount($order_id, $actualAmountToPay);
+                        header('Location: home.php?view=home&actualamount='.$actualAmount);
+                    }else{
+                        header('Location: home.php?view=home');
+                    }
+                    
+                }
+            }
+        break;    
     }
 }
 
@@ -58,11 +85,12 @@ if (!empty($_GET["action"])) {
             if(isset($_POST['add']))
             {
                  $material  = $_POST['material'];
-                 $quantity  = $_POST['quantity'];   
+                 $quantity  = $_POST['quantity'];
+                 $price = $_POST['price'];
 
-                 if (!empty($material) && !empty($quantity)) 
+                 if (!empty($material) && !empty($quantity) && !empty($price)) 
                  {
-                    $portCont->addInventoryProduct($material,$quantity);
+                    $portCont->addInventoryProduct($material,$quantity,$price);
                     header('Location: home.php?view=raw');      
                  }
             }
@@ -232,6 +260,25 @@ if (!empty($_GET["action"])) {
                       }
                     }
                     break;
+
+
+                    case "remove":
+                        // Delete single entry from the cart
+                        if(!empty($_GET['id']) && !empty($_GET['order_id']))
+                        {
+                        $checkIfHowMuchWillBeDeducted = $portCont->myitemOfficial($_GET["id"]);
+                            if(!empty($checkIfHowMuchWillBeDeducted)) {  
+                                $toDeduct = $checkIfHowMuchWillBeDeducted[0]['item_price'] * $checkIfHowMuchWillBeDeducted[0]['quantity'];
+                                    $mytotalOrderAmount = $portCont->myOrderOfficial($_GET["order_id"]);
+                                    if(!empty($mytotalOrderAmount)){
+                                        $amountToPayUpdate = $mytotalOrderAmount[0]['amount'] - $toDeduct;
+                                        $portCont->updateMyOrderAmount($_GET["order_id"],$amountToPayUpdate);
+                                        $portCont->deleteCartItemOfficial($_GET["id"]);
+                                        header('Location:home.php?view=addorder&order_id='.$_GET['order_id']);
+                                    }
+                            }
+                        }
+                        break;
 
           }
         }

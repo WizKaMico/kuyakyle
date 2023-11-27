@@ -24,7 +24,7 @@
                         foreach ($product as $key => $value) {
                     ?>
                      <form method="post" action="?view=food&queue=<?php echo $_GET["queue"]; ?>&purpose=<?php echo $_GET["purpose"]; ?>&action=add&code=<?php echo $product[$key]["code"]; ?>">
-                     <div class="col-md-3">
+                     <div class="col-md-3" style="margin-bottom:20px;">
                         <!-- <div class="content-with-shadow" style="background-image: url('product//icey.gif'); background-repeat: no-repeat; background-color: black;">    -->
                         <div class="content-with-shadow" style="background-repeat: no-repeat; background-color: black;"> 
                             <img src="login/<?php echo $product[$key]["image"]; ?>" style="width:100%;">
@@ -38,6 +38,7 @@
                      </div>
                      </form>
                     <?php } } ?>
+                    
                 </div>
                <?php } } ?>
             </div>

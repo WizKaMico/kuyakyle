@@ -8,6 +8,7 @@ var gridOptions7 = {
       { headerName: 'CUSTOMER', field: 'name' },
       { headerName: 'PAYMENT STATUS', field: 'payments' },
       { headerName: 'STATUS', field: 'order_status' },
+      { headerName: 'PURPOSE', field: 'purpose' },
       { headerName: 'DATE', field: 'order_at' },
       {
         headerName: 'ORDER DETAILS',
@@ -56,22 +57,45 @@ var gridOptions7 = {
     return link;
 }
   
+  // function orderLinkRenderer(params) {
+  //   var member = params.value;
+  //   if(params.data.discount_amount == 0) {
+  //     var amount = params.data.amount;
+  //   }else{
+  //     var amount = params.data.discount_amount;
+  //   }
+  //   console.log(params.value)
+  //   var link = document.createElement('a');
+  //   link.href = '#'; // Use "#" as the href to prevent default link behavior
+  //   link.textContent = member + ' - Amount: ' + amount;
+  
+  //   // Add a click event listener to open the modal
+  //   link.addEventListener('click', function(event) {
+  //     event.preventDefault(); // Prevent default link behavior
+  //     openModal(member, amount); // Open the modal with the specified UID
+  //   });
+  
+  //   return link;
+  // }
+
   function orderLinkRenderer(params) {
     var member = params.value;
-    var amount = params.data.amount;
-    console.log(params.value)
+    var amount = params.data.discount_amount !== null && params.data.discount_amount > 0 ?
+      params.data.discount_amount :
+      params.data.amount;
+  
     var link = document.createElement('a');
-    link.href = '#'; // Use "#" as the href to prevent default link behavior
+    link.href = '#';
     link.textContent = member + ' - Amount: ' + amount;
   
-    // Add a click event listener to open the modal
     link.addEventListener('click', function(event) {
-      event.preventDefault(); // Prevent default link behavior
-      openModal(member, amount); // Open the modal with the specified UID
+      event.preventDefault();
+      openModal(member, amount);
     });
   
     return link;
   }
+  
   
   // Custom cell renderer for the "Edit" link
   

@@ -61,6 +61,7 @@
                  $orderResult = $portCont->getOrderItemsByOrderId($order);
                  foreach ($orderResult as $key => $value) {     
                         $totalAmount = $orderResult[$key]['item_price'] * $orderResult[$key]['quantity'];
+
                         echo "
                             <tr>
                                 <td>".$orderResult[$key]['product_name']."</td>
@@ -69,18 +70,63 @@
                                 <td>".$totalAmount."</td>
                             </tr>
                         ";
+
+                    
                     }
 
                     ?>
                 </tbody>
 
+                <br />
+
+                <thead>
+                    <th>DISCOUNT</th>
+                    <th>NUMBER</th>
+                    <th>AMOUNT</th>
+                </thead>
+        
+                <tbody>
+                    <?php 
+                 $customerId = $orderTaker[0]['customer_id']; 
+                 $orderResult1 = $portCont->getDiscountIfAny($customerId);
+                 if(!empty($orderResult1)) {
+                 foreach ($orderResult1 as $key => $value) {     
+
+                        echo "
+                            <tr>
+                                <td>".$orderResult1[$key]['discount']."</td>
+                                <td>".$orderResult1[$key]['user_discount']."</td>
+                                <td>".$orderResult1[$key]['discount_amount']."</td>
+                            </tr>
+                        ";
+
+                    
+                    }
+                }
+
+                    ?>
+                </tbody>
+
                 <tfoot>
+                    <?php $orderResultDiscount = $portCont->getDiscountIfAny($customerId); ?>
+                    <?php if(!empty($orderResultDiscount)) {  ?>
+                    <tr>
+                        <td>Total</td>
+                        <td></td>
+                        <td><?php echo  $orderTaker[0]['discount_amount']; ?></td>
+                    </tr>
+                    <tr>
+                        <td>W/O Discount</td>
+                        <td></td>
+                        <td><?php echo  $orderResultDiscount[0]['original_price']; ?></td>
+                    </tr>
+                    <?php }else { ?>
                     <tr>
                         <td>Total</td>
                         <td></td>
                         <td><?php echo  $orderTaker[0]['amount']; ?></td>
-                    </tr>
-
+                    </tr>    
+                    <?php } ?>
                     <tr>
                         <td>Cash</td>
                         <td></td>
@@ -97,6 +143,9 @@
 
             </table>
         </div>
+
+
+        
 
     </div>
 

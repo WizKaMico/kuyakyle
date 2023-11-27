@@ -69,6 +69,7 @@ if (! empty($_GET["action"])) {
         case "dine":
             if(isset($_POST['proceed'])){
                 session_start();
+                date_default_timezone_set('Asia/Manila');
 
             
                 $currentDate = date("Ymd");
@@ -96,6 +97,7 @@ if (! empty($_GET["action"])) {
         case "take":
             if(isset($_POST['proceed'])){
                 session_start();
+                date_default_timezone_set('Asia/Manila');
 
             
                 $currentDate = date("Ymd");
@@ -119,6 +121,31 @@ if (! empty($_GET["action"])) {
                 header('Location:?view=food&queue='.$queue.'&purpose='.$purpose);
             }
             break;
+
+        case "reorder":
+            if(isset($_POST['proceed'])){
+                session_start();
+                header('Location:?view=reoder');
+            }
+            break;
+
+        case "orderchecker":
+            if(isset($_POST['proceed'])){
+                $orderid = $_POST['customer_id'];
+                if(!empty($orderid)){
+                    $order = $storeCart->checkMyOrder($orderid);
+                    if(!empty($order)){
+                        $purpose = $order[0]['purpose'];
+                        $queue = $order[0]['customer_id'];
+                        header('Location:?view=food&queue='.$queue.'&purpose='.$purpose);
+                    }else{
+                        header('Location:?view=reoder&message=noorder');    
+                    }
+                }else{
+                    header('Location:?view=reoder&message=error');  
+                }
+            }
+
         case "checkout":
             if(isset($_POST["proceed_payment"])) {
                 $name = $_POST ['name'];

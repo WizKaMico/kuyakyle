@@ -11,6 +11,9 @@
         <label for="statusSelect">Quantity:</label>
         <input type="text" id="statusSelect" name="quantity" />
 
+        <label for="statusSelect">PRICE:</label>
+        <input type="text" id="statusSelect" name="price" />
+
         <button type="submit" name="add">CREATE INVENTORY</button>
     
     </form>

@@ -8,6 +8,7 @@ var gridOptions31 = {
       { headerName: 'ORDER ID', field: 'member'},
       { headerName: 'STATUS', field: 'order_status',  cellRenderer: orderLinkRendererForStatus },
       { headerName: 'DATE', field: 'order_at' },
+      { headerName: 'PURPOSE', field: 'purpose' },
       {
         headerName: 'ORDER DETAILS',
         field: 'orderDetails',

@@ -7,8 +7,8 @@
     <input type="hidden" id="orderInput" name="order_id" readonly>
       <label for="statusSelect">Select Status:</label>
       <select id="statusSelect" name="status">
-        <option value="PENDING">PENDING</option>
-        <option value="IN-PROGRESS">IN-PROGRESS</option>
+        <option value="PREPARING">PREPARING</option>
+        <option value="READY TO SERVE">READY TO SERVE</option>
         <option value="COMPLETED">COMPLETED</option>
         <option value="CLAIMED">CLAIMED</option>
       </select>

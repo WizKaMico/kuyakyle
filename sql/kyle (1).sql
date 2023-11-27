@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 17, 2023 at 05:41 AM
+-- Generation Time: Nov 27, 2023 at 06:59 PM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 5.6.40
 
@@ -62,7 +62,33 @@ CREATE TABLE `tbl_cart` (
 INSERT INTO `tbl_cart` (`id`, `product_id`, `quantity`, `member_id`) VALUES
 (1, 2, 1, '20231017-005'),
 (2, 3, 1, '20231017-005'),
-(4, 3, 4, '20231017-006');
+(4, 3, 4, '20231017-006'),
+(10, 3, 1, '20231117-001'),
+(11, 4, 1, '20231117-001'),
+(12, 10, 1, '20231117-001'),
+(13, 12, 1, '20231117-001'),
+(14, 9, 1, '20231117-001'),
+(15, 1, 1, '20231117-002'),
+(16, 2, 1, '20231117-002'),
+(17, 3, 1, '20231117-002'),
+(22, 1, 1, '20231124-001'),
+(23, 2, 1, '20231124-001'),
+(24, 4, 1, '20231124-001'),
+(25, 1, 1, '20231124-002'),
+(26, 2, 1, '20231124-002'),
+(27, 3, 1, '20231124-002'),
+(28, 1, 1, '20231125-001'),
+(29, 2, 1, '20231125-001'),
+(30, 3, 3, '20231125-001'),
+(31, 4, 1, '20231125-001'),
+(32, 3, 1, '20231126-002'),
+(33, 4, 1, '20231126-002'),
+(34, 3, 1, '20231126-003'),
+(35, 2, 1, '20231126-003'),
+(36, 4, 1, '20231126-003'),
+(37, 2, 2, '20231127-001'),
+(38, 3, 2, '20231127-001'),
+(39, 4, 2, '20231127-001');
 
 -- --------------------------------------------------------
 
@@ -83,7 +109,8 @@ INSERT INTO `tbl_categorry` (`cid`, `category_name`) VALUES
 (1, 'MEAL'),
 (2, 'DRINK'),
 (3, 'EXTRA'),
-(4, 'SERVICE');
+(4, 'SERVICE'),
+(5, 'DISCOUNT');
 
 -- --------------------------------------------------------
 
@@ -176,6 +203,7 @@ CREATE TABLE `tbl_order` (
   `payments` varchar(50) NOT NULL,
   `amounts` int(50) NOT NULL,
   `changes` int(50) NOT NULL,
+  `discount_amount` int(100) NOT NULL,
   `order_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -183,9 +211,39 @@ CREATE TABLE `tbl_order` (
 -- Dumping data for table `tbl_order`
 --
 
-INSERT INTO `tbl_order` (`id`, `customer_id`, `amount`, `name`, `order_status`, `purpose`, `payments`, `amounts`, `changes`, `order_at`) VALUES
-(1, '20231017-005', 200, 'Gerald Mico Facistol', 'PENDING', 'DINE-IN', '', 0, 0, '2023-10-17 04:39:40'),
-(2, '20231017-006', 400, 'Gerald Mico Facistol', 'PENDING', 'DINE-IN', '', 0, 0, '2023-10-17 05:27:35');
+INSERT INTO `tbl_order` (`id`, `customer_id`, `amount`, `name`, `order_status`, `purpose`, `payments`, `amounts`, `changes`, `discount_amount`, `order_at`) VALUES
+(1, '20231017-005', 200, 'Gerald Mico Facistol', 'PENDING', 'DINE-IN', '', 0, 0, 0, '2023-10-17 04:39:40'),
+(2, '20231017-006', 400, 'Gerald Mico Facistol', 'PENDING', 'DINE-IN', '', 0, 0, 0, '2023-10-17 05:27:35'),
+(3, '20231117-001', 400, 'Gerald Mico Facistol', 'COMPLETED', 'DINE-IN', 'UN PAID', 500, 100, 0, '2023-11-17 04:01:16'),
+(4, '20231117-002', 300, 'Herald', 'COMPLETED', 'DINE-IN', 'PAID', 500, 200, 0, '2023-11-17 06:34:33'),
+(5, '20231124-002', 300, 'Gerald Mico Facistol', 'PENDING', 'DINE-IN', '', 0, 0, 0, '2023-11-24 06:50:55'),
+(6, '20231125-001', 400, 'Gerald Mico Facistol', 'READY TO SERVE', 'DINE-IN', '', 0, 0, 0, '2023-11-25 12:06:57'),
+(7, '20231126-002', 200, 'TEST ORDER UMAGA', 'PREPARING', 'DINE-IN', '', 0, 0, 0, '2023-11-25 17:32:50'),
+(8, '20231126-003', 240, 'test order ', 'COMPLETED', 'DINE-IN', 'PAID', 300, 60, 240, '2023-11-26 00:36:48'),
+(9, '20231127-001', 300, 'aNOTHER tEST', 'PREPARING', 'TAKE-OUT', '', 0, 0, 0, '2023-11-27 14:39:43'),
+(10, '20231127-001', 600, 'Check Mate', 'PREPARING', 'TAKE-OUT', '', 0, 0, 0, '2023-11-27 14:43:27');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_order_discount`
+--
+
+CREATE TABLE `tbl_order_discount` (
+  `tbd` int(11) NOT NULL,
+  `order_id` varchar(250) NOT NULL,
+  `discount` varchar(50) NOT NULL,
+  `user_discount` int(50) NOT NULL,
+  `discount_amount` int(100) NOT NULL,
+  `original_price` int(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbl_order_discount`
+--
+
+INSERT INTO `tbl_order_discount` (`tbd`, `order_id`, `discount`, `user_discount`, `discount_amount`, `original_price`) VALUES
+(1, '20231126-003', 'PWD', 3, 60, 300);
 
 -- --------------------------------------------------------
 
@@ -208,7 +266,31 @@ CREATE TABLE `tbl_order_item` (
 INSERT INTO `tbl_order_item` (`id`, `order_id`, `product_id`, `item_price`, `quantity`) VALUES
 (1, 1, 2, 100, 1),
 (2, 1, 3, 100, 1),
-(3, 2, 3, 100, 4);
+(3, 2, 3, 100, 4),
+(4, 3, 3, 100, 1),
+(5, 3, 4, 100, 1),
+(6, 3, 10, 50, 1),
+(7, 3, 12, 100, 1),
+(8, 3, 9, 50, 1),
+(9, 4, 1, 100, 1),
+(10, 4, 2, 100, 1),
+(11, 4, 3, 100, 1),
+(12, 5, 1, 100, 1),
+(13, 5, 2, 100, 1),
+(14, 5, 3, 100, 1),
+(17, 6, 3, 100, 3),
+(18, 6, 4, 100, 1),
+(19, 7, 3, 100, 1),
+(20, 7, 4, 100, 1),
+(21, 8, 3, 100, 1),
+(22, 8, 2, 100, 1),
+(23, 8, 4, 100, 1),
+(24, 9, 2, 100, 1),
+(25, 9, 3, 100, 1),
+(26, 9, 4, 100, 1),
+(27, 10, 2, 100, 2),
+(28, 10, 3, 100, 2),
+(29, 10, 4, 100, 2);
 
 -- --------------------------------------------------------
 
@@ -256,7 +338,10 @@ INSERT INTO `tbl_product` (`id`, `name`, `code`, `category`, `image`, `price`, `
 (9, 'FRIES', 'EXTRA-7754', 3, 'product/3/fries_extra.png', 50.00, 'STOCK'),
 (10, 'RICE', 'EXTRA-7910', 3, 'product/3/rice_extra.png', 50.00, 'STOCK'),
 (11, 'WINGS', 'EXTRA-9528', 3, 'product/3/wings_extra.png', 100.00, 'STOCK'),
-(12, 'ALJURS HOTDOG SILOG', 'SERVICE-8704', 4, 'product/4/longsilod_meal.png', 100.00, '');
+(12, 'ALJURS HOTDOG SILOG', 'SERVICE-8704', 4, 'product/4/longsilod_meal.png', 100.00, ''),
+(13, 'Happy Meal', 'MEAL-9389', 1, 'product/1/cornsilog_meal.png', 100.00, ''),
+(14, 'PWD', 'DISCOUNT-9367', 5, 'product/5/coin-vector-icon-png_296039-removebg-preview.png', 12.00, ''),
+(15, 'SENIOR', 'DISCOUNT-8644', 5, 'product/5/coin-vector-icon-png_296039-removebg-preview.png', 20.00, '');
 
 -- --------------------------------------------------------
 
@@ -310,6 +395,7 @@ INSERT INTO `tbl_raw_binded_product` (`id`, `rid`, `product_id`, `unit`, `quanti
 CREATE TABLE `tbl_raw_material` (
   `rid` int(11) NOT NULL,
   `material` varchar(50) NOT NULL,
+  `price` int(100) NOT NULL,
   `quantity` int(11) NOT NULL,
   `date_added` date NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -318,19 +404,20 @@ CREATE TABLE `tbl_raw_material` (
 -- Dumping data for table `tbl_raw_material`
 --
 
-INSERT INTO `tbl_raw_material` (`rid`, `material`, `quantity`, `date_added`) VALUES
-(1, 'CORNBEEF', 200, '2023-10-08'),
-(2, 'EGG', 200, '2023-10-08'),
-(3, 'RICE', 200, '2023-10-08'),
-(4, 'HOTDOG', 200, '2023-10-08'),
-(5, 'TAPA', 200, '2023-10-08'),
-(6, 'LONGANISA', 200, '2023-10-08'),
-(7, 'HAM', 200, '2023-10-08'),
-(8, 'CHICKEN', 200, '2023-10-08'),
-(9, 'MILK', 200, '2023-10-08'),
-(10, 'SUGAR', 200, '2023-10-08'),
-(11, 'FRIES', 200, '2023-10-08'),
-(12, 'TEST MATERIAL', 100, '2023-10-08');
+INSERT INTO `tbl_raw_material` (`rid`, `material`, `price`, `quantity`, `date_added`) VALUES
+(1, 'CORNBEEF', 20, 200, '2023-10-08'),
+(2, 'EGG', 20, 200, '2023-10-08'),
+(3, 'RICE', 20, 200, '2023-10-08'),
+(4, 'HOTDOG', 20, 200, '2023-10-08'),
+(5, 'TAPA', 20, 200, '2023-10-08'),
+(6, 'LONGANISA', 20, 200, '2023-10-08'),
+(7, 'HAM', 20, 200, '2023-10-08'),
+(8, 'CHICKEN', 20, 200, '2023-10-08'),
+(9, 'MILK', 20, 200, '2023-10-08'),
+(10, 'SUGAR', 20, 200, '2023-10-08'),
+(11, 'FRIES', 20, 200, '2023-10-08'),
+(12, 'TEST MATERIAL', 20, 100, '2023-10-08'),
+(13, 'EGGNOG', 20, 100, '2023-11-25');
 
 -- --------------------------------------------------------
 
@@ -428,6 +515,12 @@ ALTER TABLE `tbl_order`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `tbl_order_discount`
+--
+ALTER TABLE `tbl_order_discount`
+  ADD PRIMARY KEY (`tbd`);
+
+--
 -- Indexes for table `tbl_order_item`
 --
 ALTER TABLE `tbl_order_item`
@@ -490,13 +583,13 @@ ALTER TABLE `remember_me_tokens`
 -- AUTO_INCREMENT for table `tbl_cart`
 --
 ALTER TABLE `tbl_cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
 
 --
 -- AUTO_INCREMENT for table `tbl_categorry`
 --
 ALTER TABLE `tbl_categorry`
-  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `cid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `tbl_dapp_login`
@@ -514,13 +607,19 @@ ALTER TABLE `tbl_designation`
 -- AUTO_INCREMENT for table `tbl_order`
 --
 ALTER TABLE `tbl_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
+-- AUTO_INCREMENT for table `tbl_order_discount`
+--
+ALTER TABLE `tbl_order_discount`
+  MODIFY `tbd` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `tbl_order_item`
 --
 ALTER TABLE `tbl_order_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT for table `tbl_payment`
@@ -532,7 +631,7 @@ ALTER TABLE `tbl_payment`
 -- AUTO_INCREMENT for table `tbl_product`
 --
 ALTER TABLE `tbl_product`
-  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(8) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `tbl_raw_binded_product`
@@ -544,7 +643,7 @@ ALTER TABLE `tbl_raw_binded_product`
 -- AUTO_INCREMENT for table `tbl_raw_material`
 --
 ALTER TABLE `tbl_raw_material`
-  MODIFY `rid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `rid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `tbl_raw_material_history`

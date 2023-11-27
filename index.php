@@ -55,6 +55,8 @@
         <?php if(!empty($_GET['view'])) { ?>
         <?php if($_GET['view'] == 'index') { ?>
         <?php include('pages/index.php'); ?>
+        <?php }else if($_GET['view'] == 'reoder') { ?>
+        <?php include('pages/re-order.php'); ?>
         <?php }else if($_GET['view'] == 'food') { ?>
         <?php include('pages/food.php'); ?>
         <?php }else if($_GET['view'] == 'checkout') { ?>
@@ -72,7 +74,12 @@
    <?php if(!empty($_GET['view'])) { ?>
      <?php if($_GET['view'] == 'food') { ?>   
         <div id="cartCheck" class="cartCheck">
-          <i class="fas fa-shopping-cart icon" aria-hidden="true"></i>
+        <?php if(empty($item_quantity)) { ?>
+          <i class="fas fa-shopping-cart icon" aria-hidden="true" style="font-size:20px;"></i>
+        <?php } else { ?>
+          <i class="fas fa-shopping-cart icon" aria-hidden="true" style="font-size:20px;"></i>
+        <span style="position: absolute; top: -10px; right: -10px; background-color: red; color: white; border-radius: 50%; padding: 5px 8px; font-size: 14px;"><?php echo $item_quantity; ?></span>
+        <?php } ?>
             <div class="col-md-12">
             <form class="form" style="overflow: auto; max-height: 400px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center;">
                <?php include('pages/cart.php'); ?>

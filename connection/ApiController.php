@@ -140,6 +140,68 @@ class shopController extends DBController
         $this->updateDB($query, $params);
     }
 
+    function myitemOfficial($cart_id)
+    {
+        $query = "SELECT * FROM tbl_order_item WHERE id = ?";
+        
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $cart_id
+            )
+        );
+        
+        $userCredentials = $this->getDBResult($query, $params);
+        return $userCredentials;
+    }
+
+    function deleteCartItemOfficial($cart_id)
+    {
+        $query = "DELETE FROM tbl_order_item WHERE id = ?";
+        
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $cart_id
+            )
+        );
+        
+        $this->updateDB($query, $params);
+    }
+
+    function myOrderOfficial($oid)
+    {
+        $query = "SELECT * FROM tbl_order WHERE id = ?";
+        
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $oid
+            )
+        );
+        
+        $userCredentials = $this->getDBResult($query, $params);
+        return $userCredentials; 
+    }
+
+    function updateMyOrderAmount($oid,$amountToPayUpdate)
+    {
+        $query = "UPDATE tbl_order SET  amount = ? WHERE id= ?";
+        
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $amountToPayUpdate
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $oid
+            )
+        );
+        
+        $this->updateDB($query, $params);
+    }
+
     function emptyCart($member_id)
     {
         $query = "DELETE FROM tbl_cart WHERE member_id = ?";
@@ -156,6 +218,8 @@ class shopController extends DBController
     
     function insertOrder($customer_detail, $member_id, $amount)
     {
+        date_default_timezone_set('Asia/Manila');
+
         $query = "INSERT INTO tbl_order (customer_id, amount, name, order_status, purpose, order_at) VALUES (?, ?, ?, ?, ?, ?)";
         
         $params = array(
@@ -173,7 +237,7 @@ class shopController extends DBController
             ),
             array(
                 "param_type" => "s",
-                "param_value" => "PENDING"
+                "param_value" => "PREPARING"
             ),
             array(
                 "param_type" => "s",
@@ -187,6 +251,73 @@ class shopController extends DBController
         
         $order_id = $this->insertDB($query, $params);
         return $order_id;
+    }
+
+    function insertOrderDiscount($order_id, $discount, $discount_number, $actualAmount, $original_price)
+    {
+        $query = "INSERT INTO tbl_order_discount (order_id, discount, user_discount, discount_amount, original_price) VALUES (?, ?, ?, ?, ?)";
+        
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $order_id
+            ),
+            array(
+                "param_type" => "s",
+                "param_value" => $discount
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $discount_number
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $actualAmount
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $original_price
+            )
+            );
+        
+        $this->insertDB($query, $params);
+    }
+
+    function updateOrderDiscount($order_id, $actualAmountToPay)
+    {
+        $query = "UPDATE tbl_order SET  discount_amount = ?, amount = ? WHERE customer_id = ?";
+        
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $actualAmountToPay
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $actualAmountToPay
+            ),
+            array(
+                "param_type" => "s",
+                "param_value" => $order_id
+            )
+        );
+        
+        $this->updateDB($query, $params);
+    }
+
+    function checkOrderTobeDiscounted($order_id)
+    {
+        $query = "SELECT * FROM tbl_order T LEFT JOIN tbl_order_item TOI ON T.id = TOI.order_id WHERE customer_id = ?";
+        
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $order_id
+            )
+        );
+        
+        $userCredentials = $this->getDBResult($query, $params);
+        return $userCredentials; 
     }
     
     function insertOrderItem($order, $product_id, $price, $quantity)
@@ -420,6 +551,101 @@ class shopController extends DBController
         return $productResult;
     }
 
+    function allSalesListTabulated()
+    {
+        $query = "SELECT SUM(T.amount) as PROFIT, COUNT(T.customer_id) as TOTAL_ORDERS, DATE(T.order_at) as DateSpecific 
+        FROM tbl_order T 
+        GROUP BY DATE(T.order_at);
+        ";
+        
+        $productResult = $this->getDBResult($query);
+        return $productResult;
+    }
+
+    function allSalesListTabulatedToday()
+    {
+
+        $query = "SELECT SUM(T.amount) as PROFIT, COUNT(T.customer_id) as TOTAL_ORDERS, DATE(T.order_at) as DateSpecific FROM tbl_order T WHERE DATE(T.order_at) = CURDATE() GROUP BY DATE(T.order_at);";
+        
+        $productResult = $this->getDBResult($query);
+        return $productResult;
+    }
+
+    function allSalesListTabulatedWeek()
+    {
+
+        $query = "SELECT 
+        DATE(T.order_at) as DateSpecific, 
+        SUM(T.amount) as PROFIT, 
+        COUNT(T.customer_id) as TOTAL_ORDERS
+    FROM 
+        tbl_order T 
+    WHERE 
+        YEAR(T.order_at) = YEAR(NOW()) 
+        AND WEEK(T.order_at) = WEEK(NOW())
+    GROUP BY 
+        DateSpecific";
+        
+        $productResult = $this->getDBResult($query);
+        return $productResult;
+    }
+
+    function allSalesListTabulatedMonth()
+    {
+        $query = "SELECT 
+        DATE(T.order_at) as DateSpecific, 
+        SUM(T.amount) as PROFIT, 
+        COUNT(T.customer_id) as TOTAL_ORDERS
+    FROM 
+        tbl_order T 
+    WHERE 
+        YEAR(T.order_at) = YEAR(NOW()) 
+        AND MONTH(T.order_at) = MONTH(NOW())
+    GROUP BY 
+        DateSpecific"; 
+
+$productResult = $this->getDBResult($query);
+return $productResult;
+
+    }
+
+    function mostSoldProduct()
+    {
+        $query = "SELECT 
+        TP.name, 
+        TP.code, 
+        SUM(TI.quantity) AS orders,
+        SUM(TP.price * TI.quantity) AS income
+        
+    FROM 
+        tbl_order_item TI 
+    LEFT JOIN 
+        tbl_product TP ON TI.product_id = TP.id 
+    GROUP BY 
+        TP.code, TP.name 
+    ORDER BY 
+        orders DESC"; 
+
+$productResult = $this->getDBResult($query);
+return $productResult;
+    }
+
+
+    function checkSalesDayToCompare($date)
+    {
+        $query = "SELECT SUM(TRM.price) as expense, DATE(T.order_at) as DateSpecific FROM tbl_order T LEFT JOIN tbl_order_item TOI ON T.id = TOI.order_id LEFT JOIN tbl_product TP ON TOI.product_id = TP.id LEFT JOIN tbl_raw_binded_product TRBP ON TP.id = TRBP.product_id LEFT JOIN tbl_raw_material TRM ON TRBP.rid = TRM.rid  WHERE  DATE(T.order_at) = ?"; 
+
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $date
+            )
+        );
+    
+        $categorySpecificResult = $this->getDBResult($query, $params);
+        return $categorySpecificResult;
+    }
+
 
     function allSalesTodayList()
     {
@@ -430,6 +656,7 @@ class shopController extends DBController
             O.name,
             O.order_status,
             O.payments,
+            O.purpose,
             DATE(O.order_at) AS order_at,
             GROUP_CONCAT(
                 CONCAT(P.code, ' - Price: ', I.item_price, ' - Quantity: ', I.quantity)
@@ -440,7 +667,7 @@ class shopController extends DBController
         LEFT JOIN tbl_order_item I ON O.id = I.order_id
         LEFT JOIN tbl_product P ON I.product_id = P.id
         WHERE DATE(O.order_at) = CURDATE()
-        GROUP BY O.id, O.customer_id, O.amount, O.name, O.order_status,  O.payments, DATE(O.order_at)";
+        GROUP BY O.id, O.customer_id, O.amount, O.name, O.order_status,  O.payments,  O.purpose, DATE(O.order_at)";
 
         $productResult = $this->getDBResult($query);
         return $productResult;
@@ -448,12 +675,16 @@ class shopController extends DBController
 
     function allSalesChefTodayList()
     {
+        date_default_timezone_set('Asia/Manila');
+
+
         $query = "SELECT
         O.id AS customer_id,
         O.customer_id AS member,
         O.amount,
         O.name,
         O.order_status,
+        O.purpose,
         DATE(O.order_at) AS order_at,
         GROUP_CONCAT(
             CONCAT(P.name, ' - Price: ', I.item_price, ' - Quantity: ', I.quantity)
@@ -464,7 +695,7 @@ class shopController extends DBController
     LEFT JOIN tbl_order_item I ON O.id = I.order_id
     LEFT JOIN tbl_product P ON I.product_id = P.id
     WHERE DATE(O.order_at) = CURDATE() AND O.order_status != 'COMPLETED'
-    GROUP BY O.id, O.customer_id, O.amount, O.name, O.order_status, DATE(O.order_at)";
+    GROUP BY O.id, O.customer_id, O.amount, O.name, O.order_status, O.purpose, DATE(O.order_at)";
 
     $productResult = $this->getDBResult($query);
     return $productResult;
@@ -620,9 +851,9 @@ class shopController extends DBController
     }
 
 
-    function addInventoryProduct($material,$quantity)
+    function addInventoryProduct($material,$quantity,$price)
     {
-        $query = "INSERT INTO tbl_raw_material (material, quantity, date_added) VALUES (?,?,?)"; 
+        $query = "INSERT INTO tbl_raw_material (material, quantity, price, date_added) VALUES (?,?,?,?)"; 
 
         $params = array(
             array(
@@ -632,6 +863,10 @@ class shopController extends DBController
             array(
                 "param_type" => "i",
                 "param_value" => $quantity
+            ),
+            array(
+                "param_type" => "i",
+                "param_value" => $price
             ),
             array(
                 "param_type" => "s",
@@ -901,6 +1136,20 @@ class shopController extends DBController
         return $resultOrderExistenceResult;
     }
 
+    function getDiscountIfAny($customerId){
+        $query = "SELECT * FROM tbl_order_discount WHERE order_id = ?"; 
+
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $customerId
+            )
+        );
+    
+        $resultOrderExistenceResult = $this->getDBResult($query, $params);
+        return $resultOrderExistenceResult;
+    }
+
 
     function updateCustomerOrderDetails($order, $newSum)
     {
@@ -922,7 +1171,7 @@ class shopController extends DBController
     
     function getOrderItemsByOrderId($order)
     {
-        $query = "SELECT *,TP.name as product_name FROM tbl_order_item TOI LEFT JOIN tbl_product TP ON TOI.product_id = TP.id LEFT JOIN tbl_order T ON TOI.order_id = T.id WHERE TOI.order_id =  ?"; 
+        $query = "SELECT *,TP.name as product_name, TOI.id as myorderid FROM tbl_order_item TOI LEFT JOIN tbl_product TP ON TOI.product_id = TP.id LEFT JOIN tbl_order T ON TOI.order_id = T.id WHERE TOI.order_id =  ?"; 
 
         $params = array(
             array(
@@ -965,6 +1214,21 @@ class shopController extends DBController
         );
         
         $this->updateDB($query, $params); 
+    }
+
+    function checkMyOrder($orderid)
+    {
+        $query = "SELECT * FROM tbl_order TOI WHERE TOI.customer_id =  ?"; 
+
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $orderid
+            )
+        );
+    
+        $resultOrderExistenceResult = $this->getDBResult($query, $params);
+        return $resultOrderExistenceResult;
     }
 
 }
