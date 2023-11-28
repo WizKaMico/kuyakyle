@@ -666,11 +666,26 @@ return $productResult;
         FROM tbl_order O
         LEFT JOIN tbl_order_item I ON O.id = I.order_id
         LEFT JOIN tbl_product P ON I.product_id = P.id
-        WHERE DATE(O.order_at) = CURDATE()
+        WHERE DATE(O.order_at) = CURDATE() AND O.order_status != 'CLAIMED'
         GROUP BY O.id, O.customer_id, O.amount, O.name, O.order_status,  O.payments,  O.purpose, DATE(O.order_at)";
 
         $productResult = $this->getDBResult($query);
         return $productResult;
+    }
+
+    function checkIfExestingOrderRepeated($orderId)
+    {
+        $query = "SELECT * FROM tbl_order WHERE customer_id = ?";
+
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $orderId
+            )
+        );
+    
+        $categorySpecificResult = $this->getDBResult($query, $params);
+        return $categorySpecificResult;
     }
 
     function allSalesChefTodayList()
@@ -694,7 +709,7 @@ return $productResult;
     FROM tbl_order O
     LEFT JOIN tbl_order_item I ON O.id = I.order_id
     LEFT JOIN tbl_product P ON I.product_id = P.id
-    WHERE DATE(O.order_at) = CURDATE() AND O.order_status != 'COMPLETED'
+    WHERE DATE(O.order_at) = CURDATE() AND O.order_status != 'CLAIMED'
     GROUP BY O.id, O.customer_id, O.amount, O.name, O.order_status, O.purpose, DATE(O.order_at)";
 
     $productResult = $this->getDBResult($query);

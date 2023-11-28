@@ -19,7 +19,7 @@ if(!empty($_GET["cashier"])) {
                 $change  = $_POST['change'];
 
 
-                if (!empty($order_id) && !empty($status) && !empty($payment) && !empty($amount) && !empty($change)) 
+                if (!empty($order_id) && !empty($status) && !empty($payment)) 
                 {
                      $portCont->updateOrderStat($status, $payment, $amount, $change, $order_id);
                      header('Location: home.php?view=home');

@@ -62,7 +62,13 @@
                 <form  action="?view=checkout&queue=<?php echo $_GET["queue"]; ?>&purpose=<?php echo $_GET["purpose"]; ?>&action=checkout" method="POST">
                     <br />
                     <div class="input-field">
+                        <?php $orderId = $_GET['queue']; ?>
+                        <?php $checkIfReProcess = $storeCart->checkIfExestingOrderRepeated($orderId); ?>
+                        <?php if(!empty($checkIfReProcess)) { ?>
+                        <input type="text" name="name" class="rounded-input" id="name" PlaceHolder="Customer Name" value="<?php echo $checkIfReProcess[0]['name']; ?>" readonly="">
+                        <?php } else { ?>
                         <input type="text" name="name" class="rounded-input" id="name" PlaceHolder="Customer Name" required>
+                        <?php } ?>
                         <input type="hidden" name="purpose" class="rounded-input" id="purpose" value="<?php echo $_GET["purpose"]; ?>" required>
                     </div> 
                     <div class="input-field">
