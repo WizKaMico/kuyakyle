@@ -545,7 +545,7 @@ class shopController extends DBController
         // { headerName: 'STATUS', field: 'order_status' },
         // { headerName: 'DATE', field: 'order_at' }
 
-        $query = "SELECT T.customer_id, T.amount, T.name, T.order_status, DATE(T.order_at) as DateSpecific FROM tbl_order T ";
+        $query = "SELECT T.customer_id, SUM(T.amount) as total, T.name, T.order_status, DATE(T.order_at) as DateSpecific FROM tbl_order T GROUP BY T.customer_id";
         
         $productResult = $this->getDBResult($query);
         return $productResult;
@@ -1245,5 +1245,44 @@ return $productResult;
         $resultOrderExistenceResult = $this->getDBResult($query, $params);
         return $resultOrderExistenceResult;
     }
+
+    function myAvailTable()
+    {
+        $query = "SELECT * FROM tbl_avail_sit TAS WHERE status = 'AVAILABLE'"; 
+
+    
+        $resultOrderExistenceResult = $this->getDBResult($query);
+        return $resultOrderExistenceResult;
+    }
+
+    function updateTableAvailability($name)
+    {
+        $query = "UPDATE tbl_avail_sit SET status = 'UNAVAILABLE' WHERE SITID = ?";
+        
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $name
+            )
+        );
+        
+        $this->updateDB($query, $params);
+    }
+
+    function reOrderTableOrder($name)
+    {
+        $query = "SELECT * FROM tbl_avail_sit TAS LEFT JOIN tbl_order T ON TAS.sitid = T.name WHERE TAS.sitid  =  ? AND DATE(T.order_at) = CURDATE()"; 
+
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $name
+            )
+        );
+    
+        $resultOrderExistenceResult = $this->getDBResult($query, $params);
+        return $resultOrderExistenceResult;
+    }
+
 
 }

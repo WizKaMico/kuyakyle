@@ -5,7 +5,7 @@
                 <center>
                     <form action="?action=orderchecker" method="POST">
                     <img src="product/tc/dinein.png" style="width:40%;"/>
-                    <input type="text" name="customer_id" class="rounded-input" placeholder="Enter OrderId Found In Your Reciept" />
+                    <input type="text" name="name" class="rounded-input" placeholder="Enter Table Name ex. 1" />
                     <button name="proceed" class="rounded-button">DINE-IN</button>
                     </form>
                 </center>

@@ -131,15 +131,21 @@ if (! empty($_GET["action"])) {
 
         case "orderchecker":
             if(isset($_POST['proceed'])){
-                $orderid = $_POST['customer_id'];
-                if(!empty($orderid)){
-                    $order = $storeCart->checkMyOrder($orderid);
-                    if(!empty($order)){
-                        $purpose = $order[0]['purpose'];
-                        $queue = $order[0]['customer_id'];
-                        header('Location:?view=food&queue='.$queue.'&purpose='.$purpose);
+                $name = $_POST['name'];
+                if(!empty($name)){
+                    $orderVal = $storeCart->reOrderTableOrder($name);
+                    if(!empty($orderVal)){
+                        $orderid = $orderVal[0]['customer_id'];
+                        $order = $storeCart->checkMyOrder($orderid);
+                        if(!empty($order)){
+                            $purpose = $order[0]['purpose'];
+                            $queue = $order[0]['customer_id'];
+                            header('Location:?view=food&queue='.$queue.'&purpose='.$purpose);
+                        }else{
+                            header('Location:?view=reoder&message=noorder');    
+                        }
                     }else{
-                        header('Location:?view=reoder&message=noorder');    
+                    header('Location:?view=reoder&message=error');     
                     }
                 }else{
                     header('Location:?view=reoder&message=error');  
@@ -157,14 +163,29 @@ if (! empty($_GET["action"])) {
                 
                 $order = $storeCart->insertOrder ( $_POST, $member_id, $item_price);
                 if(!empty($order)) {
-                    if (! empty($cartItem)) {
+                    if($purpose == 'DINE-IN'){
+                        $storeCart->updateTableAvailability($name);
                         if (! empty($cartItem)) {
-                            foreach ($cartItem as $item) {
-                                $storeCart->insertOrderItem ( $order, $item["id"], $item["price"], $item["quantity"]);
+                            if (! empty($cartItem)) {
+                                
+                                foreach ($cartItem as $item) {
+                                    $storeCart->insertOrderItem ( $order, $item["id"], $item["price"], $item["quantity"]);
+                                }
+                                header('Location:?view=confirmed&queue='.$member_id);
                             }
-                            header('Location:?view=confirmed&queue='.$member_id);
                         }
+                    }else{
+                        if (! empty($cartItem)) {
+                            if (! empty($cartItem)) {
+                                
+                                foreach ($cartItem as $item) {
+                                    $storeCart->insertOrderItem ( $order, $item["id"], $item["price"], $item["quantity"]);
+                                }
+                                header('Location:?view=confirmed&queue='.$member_id);
+                            }
+                        } 
                     }
+                   
                 }
             }
             break;

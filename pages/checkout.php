@@ -67,8 +67,21 @@
                         <?php if(!empty($checkIfReProcess)) { ?>
                         <input type="text" name="name" class="rounded-input" id="name" PlaceHolder="Customer Name" value="<?php echo $checkIfReProcess[0]['name']; ?>" readonly="">
                         <?php } else { ?>
+
+                        <?php if($_GET['purpose'] == 'DINE-IN'){ ?>
+                        <select class="rounded-input" name="name">
+                        <?php 
+                        
+                        $availSit = $storeCart->myAvailTable();  
+                        if (! empty($availSit)) {
+                            foreach ($availSit as $key => $value) {
+                        ?>
+                        <option value="<?php echo $availSit[$key]['sitid']; ?>"><?php echo $availSit[$key]['table_name']; ?></option>
+                        <?php } } ?>
+                        </select>
+                        <?php } else { ?>
                         <input type="text" name="name" class="rounded-input" id="name" PlaceHolder="Customer Name" required>
-                        <?php } ?>
+                        <?php } } ?>
                         <input type="hidden" name="purpose" class="rounded-input" id="purpose" value="<?php echo $_GET["purpose"]; ?>" required>
                     </div> 
                     <div class="input-field">

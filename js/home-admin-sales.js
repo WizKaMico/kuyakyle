@@ -6,7 +6,7 @@ var gridOptions2 = {
         headerName: 'ORDER DETAILS',
         children: [
           { headerName: 'ORDER ID', field: 'customer_id',suppressSizeToFit: true },
-          { headerName: 'AMOUNT', field: 'amount' },
+          { headerName: 'AMOUNT', field: 'total' },
           { headerName: 'CUSTOMER', field: 'name' },
           { headerName: 'STATUS', field: 'order_status' },
           { headerName: 'DATE', field: 'DateSpecific', rowGroup: true }
