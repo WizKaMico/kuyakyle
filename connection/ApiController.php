@@ -1284,5 +1284,52 @@ return $productResult;
         return $resultOrderExistenceResult;
     }
 
+    function checkTheOrderInTheTable($order_id)
+    {
+        $query = "SELECT * FROM tbl_order T WHERE customer_id = ?"; 
+
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $order_id
+            )
+        );
+    
+        $resultOrderExistenceResult = $this->getDBResult($query, $params);
+        return $resultOrderExistenceResult;
+    }
+
+    function theTableSearch($table)
+    {
+        $query = "SELECT * FROM tbl_avail_sit TAS WHERE sitid = ?"; 
+
+        $params = array(
+            array(
+                "param_type" => "i",
+                "param_value" => $table
+            )
+        );
+    
+        $resultOrderExistenceResult = $this->getDBResult($query, $params);
+        return $resultOrderExistenceResult;
+    }
+
+    function updateMyTableStatus($myTable,$status)
+    {
+        $query = "UPDATE tbl_avail_sit SET status = ? WHERE sitid = ?";
+        
+        $params = array(
+            array(
+                "param_type" => "s",
+                "param_value" => $status
+            ),array(
+                "param_type" => "i",
+                "param_value" => $myTable
+            )
+        );
+        
+        $this->updateDB($query, $params);
+    }
+
 
 }

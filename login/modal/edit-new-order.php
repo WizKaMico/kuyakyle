@@ -3,6 +3,11 @@
   <!-- Modal content -->
   <div class="modal-content">
   <h2>ORDER STATUS</h2>
+  <div class="tab">
+          <button class="tablinks active" onclick="openKyleOption(event, 'order')">Order</button>
+          <button class="tablinks" onclick="openKyleOption(event, 'table')">Table</button>
+  </div>
+  <div id="order" class="tabcontent active">
     <form id="statusForm" method="POST" action="home.php?cashier=updateOrders">
     <input type="hidden" id="orderInput" name="order_id" readonly>
       <label for="statusSelect">Select Status:</label>
@@ -29,6 +34,18 @@
 
       <button type="submit" name="proceed">UPDATE</button>
     </form>
+    </div>
+    <div id="table" class="tabcontent">
+    <form id="statusForm" method="POST" action="home.php?cashier=updateOrderTable">
+    <input type="hidden" id="orderCheck" name="order_id" readonly>
+    <label for="statusSelect">Select Status:</label>
+      <select id="statusSelect" name="status">
+        <option value="UNAVAILABLE">UNAVAILABLE</option>
+        <option value="AVAILABLE">AVAILABLE</option>
+      </select>
+      <button type="submit" name="proceed">UPDATE</button>
+    </form>
+</div>
   </div>
 </div>
 
@@ -51,6 +68,24 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
 });
+
+
+function openKyleOption(evt, transName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(transName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
+// Trigger the click event on the first button to make "London" tab active by default
+document.getElementsByClassName("tablinks")[0].click();
 
 
 </script>
@@ -144,5 +179,42 @@ button[type="submit"]:hover {
   cursor: pointer;
 }
 
+
+/* Style the tab */
+.tab {
+    overflow: hidden;
+    border: 1px solid #ccc;
+    background-color: #f1f1f1;
+}
+
+    /* Style the buttons inside the tab */
+    .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 17px;
+    }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+
+/* Style the tab content */
+.tabcontent {
+    display: none;
+    padding: 6px 12px;
+    border: 1px solid #ccc;
+    border-top: none;
+}
 
 </style>

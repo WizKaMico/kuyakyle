@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 27, 2023 at 06:59 PM
+-- Generation Time: Dec 14, 2023 at 05:16 AM
 -- Server version: 10.1.38-MariaDB
 -- PHP Version: 5.6.40
 
@@ -41,6 +41,34 @@ CREATE TABLE `remember_me_tokens` (
 
 INSERT INTO `remember_me_tokens` (`id`, `user_id`, `token`, `expiration_date`) VALUES
 (7, 1, 'h3LEUHYjHrcqIHULo89wfqjVSBa4XuTz', '2023-10-05 11:51:44');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `tbl_avail_sit`
+--
+
+CREATE TABLE `tbl_avail_sit` (
+  `sitid` int(11) NOT NULL,
+  `table_name` varchar(50) NOT NULL,
+  `status` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `tbl_avail_sit`
+--
+
+INSERT INTO `tbl_avail_sit` (`sitid`, `table_name`, `status`) VALUES
+(1, 'TABLE 1', 'UNAVAILABLE'),
+(2, 'TABLE 2', 'UNAVAILABLE'),
+(3, 'TABLE 3', 'UNAVAILABLE'),
+(4, 'TABLE 4', 'AVAILABLE'),
+(5, 'TABLE 5', 'AVAILABLE'),
+(6, 'TABLE 6', 'AVAILABLE'),
+(7, 'TABLE 7', 'AVAILABLE'),
+(8, 'TABLE 8', 'AVAILABLE'),
+(9, 'TABLE 9', 'AVAILABLE'),
+(10, 'TABLE 10', 'AVAILABLE');
 
 -- --------------------------------------------------------
 
@@ -88,7 +116,49 @@ INSERT INTO `tbl_cart` (`id`, `product_id`, `quantity`, `member_id`) VALUES
 (36, 4, 1, '20231126-003'),
 (37, 2, 2, '20231127-001'),
 (38, 3, 2, '20231127-001'),
-(39, 4, 2, '20231127-001');
+(39, 4, 2, '20231127-001'),
+(40, 1, 1, '20231128-001'),
+(41, 2, 1, '20231128-001'),
+(42, 3, 1, '20231128-001'),
+(43, 3, 1, '20231128-002'),
+(44, 2, 1, '20231128-002'),
+(45, 4, 1, '20231128-002'),
+(46, 13, 1, '20231128-002'),
+(47, 2, 1, '20231128-003'),
+(48, 3, 1, '20231128-003'),
+(49, 4, 1, '20231128-003'),
+(50, 2, 1, '20231128-004'),
+(51, 3, 1, '20231128-004'),
+(52, 4, 1, '20231128-004'),
+(53, 1, 1, '20231128-004'),
+(54, 2, 1, '20231206-001'),
+(55, 3, 1, '20231206-001'),
+(56, 4, 1, '20231206-001'),
+(57, 2, 1, '20231206-002'),
+(58, 3, 2, '20231206-002'),
+(59, 4, 2, '20231206-002'),
+(60, 1, 1, '20231206-002'),
+(61, 3, 1, '20231206-003'),
+(62, 4, 1, '20231206-003'),
+(63, 3, 1, '20231206-004'),
+(64, 4, 1, '20231206-004'),
+(65, 1, 1, '20231206-004'),
+(66, 13, 1, '20231206-004'),
+(67, 2, 1, '20231206-005'),
+(68, 3, 1, '20231206-005'),
+(69, 4, 1, '20231206-005'),
+(70, 13, 1, '20231206-005'),
+(71, 1, 1, '20231212-001'),
+(72, 2, 1, '20231212-001'),
+(73, 3, 1, '20231212-001'),
+(74, 3, 1, '20231212-002'),
+(75, 4, 1, '20231212-002'),
+(76, 2, 1, '20231212-002'),
+(77, 3, 1, '20231212-003'),
+(78, 4, 1, '20231212-003'),
+(79, 2, 1, '20231212-003'),
+(80, 2, 1, '20231213-002'),
+(81, 3, 1, '20231213-003');
 
 -- --------------------------------------------------------
 
@@ -221,7 +291,23 @@ INSERT INTO `tbl_order` (`id`, `customer_id`, `amount`, `name`, `order_status`, 
 (7, '20231126-002', 200, 'TEST ORDER UMAGA', 'PREPARING', 'DINE-IN', '', 0, 0, 0, '2023-11-25 17:32:50'),
 (8, '20231126-003', 240, 'test order ', 'COMPLETED', 'DINE-IN', 'PAID', 300, 60, 240, '2023-11-26 00:36:48'),
 (9, '20231127-001', 300, 'aNOTHER tEST', 'PREPARING', 'TAKE-OUT', '', 0, 0, 0, '2023-11-27 14:39:43'),
-(10, '20231127-001', 600, 'Check Mate', 'PREPARING', 'TAKE-OUT', '', 0, 0, 0, '2023-11-27 14:43:27');
+(10, '20231127-001', 600, 'Check Mate', 'PREPARING', 'TAKE-OUT', '', 0, 0, 0, '2023-11-27 14:43:27'),
+(11, '20231128-001', 300, 'Gerald Mico Facistol', 'CLAIMED', 'DINE-IN', 'PAID', 400, 100, 0, '2023-11-28 14:41:45'),
+(12, '20231128-002', 400, 'TestToday', 'CLAIMED', 'DINE-IN', 'PAID', 500, 100, 0, '2023-11-28 14:47:17'),
+(13, '20231128-003', 300, 'Gerald Mico Facistol', 'READY TO SERVE', 'TAKE-OUT', 'UN PAID', 0, 0, 0, '2023-11-28 14:52:08'),
+(14, '20231128-004', 400, 'TEST TO CHECK', 'READY TO SERVE', 'DINE-IN', 'UN PAID', 0, 0, 0, '2023-11-28 15:00:50'),
+(15, '20231206-001', 300, 'Gerald Mico Facistol', 'PREPARING', 'TAKE-OUT', '', 0, 0, 0, '2023-12-06 04:25:22'),
+(16, '20231206-001', 300, 'Gerald Mico Facistol', 'PREPARING', 'TAKE-OUT', '', 0, 0, 0, '2023-12-06 04:26:42'),
+(17, '20231206-002', 400, 'TEST', 'PREPARING', 'DINE-IN', '', 0, 0, 0, '2023-12-06 05:26:34'),
+(18, '20231206-002', 600, 'TEST', 'PREPARING', 'DINE-IN', '', 0, 0, 0, '2023-12-06 05:27:19'),
+(19, '20231206-003', 200, 'Gerald Mico Facistol', 'PREPARING', 'DINE-IN', '', 0, 0, 0, '2023-12-06 05:28:52'),
+(20, '20231206-004', 400, 'Gerald Mico Facistol', 'PREPARING', 'DINE-IN', '', 0, 0, 0, '2023-12-06 05:29:17'),
+(21, '20231206-005', 400, 'test', 'PREPARING', 'TAKE-OUT', '', 0, 0, 0, '2023-12-06 05:29:41'),
+(22, '20231212-001', 300, '1', 'PREPARING', 'DINE-IN', '', 0, 0, 0, '2023-12-12 16:05:46'),
+(23, '20231212-002', 300, '2', 'PREPARING', 'DINE-IN', '', 0, 0, 0, '2023-12-12 16:20:44'),
+(24, '20231212-002', 300, '2', 'PREPARING', 'DINE-IN', '', 0, 0, 0, '2023-12-12 16:21:31'),
+(25, '20231212-003', 300, '3', 'PREPARING', 'DINE-IN', '', 0, 0, 0, '2023-12-12 16:24:29'),
+(26, '20231212-003', 300, '3', 'PREPARING', 'DINE-IN', '', 0, 0, 0, '2023-12-12 16:24:59');
 
 -- --------------------------------------------------------
 
@@ -290,7 +376,60 @@ INSERT INTO `tbl_order_item` (`id`, `order_id`, `product_id`, `item_price`, `qua
 (26, 9, 4, 100, 1),
 (27, 10, 2, 100, 2),
 (28, 10, 3, 100, 2),
-(29, 10, 4, 100, 2);
+(29, 10, 4, 100, 2),
+(30, 11, 1, 100, 1),
+(31, 11, 2, 100, 1),
+(32, 11, 3, 100, 1),
+(33, 12, 3, 100, 1),
+(34, 12, 2, 100, 1),
+(35, 12, 4, 100, 1),
+(36, 12, 13, 100, 1),
+(37, 13, 2, 100, 1),
+(38, 13, 3, 100, 1),
+(39, 13, 4, 100, 1),
+(40, 14, 2, 100, 1),
+(41, 14, 3, 100, 1),
+(42, 14, 4, 100, 1),
+(43, 14, 1, 100, 1),
+(44, 15, 2, 100, 1),
+(45, 15, 3, 100, 1),
+(46, 15, 4, 100, 1),
+(47, 16, 2, 100, 1),
+(48, 16, 3, 100, 1),
+(49, 16, 4, 100, 1),
+(50, 17, 2, 100, 1),
+(51, 17, 3, 100, 1),
+(52, 17, 4, 100, 1),
+(53, 17, 1, 100, 1),
+(54, 18, 2, 100, 1),
+(55, 18, 3, 100, 2),
+(56, 18, 4, 100, 2),
+(57, 18, 1, 100, 1),
+(58, 19, 3, 100, 1),
+(59, 19, 4, 100, 1),
+(60, 20, 3, 100, 1),
+(61, 20, 4, 100, 1),
+(62, 20, 1, 100, 1),
+(63, 20, 13, 100, 1),
+(64, 21, 2, 100, 1),
+(65, 21, 3, 100, 1),
+(66, 21, 4, 100, 1),
+(67, 21, 13, 100, 1),
+(68, 22, 1, 100, 1),
+(69, 22, 2, 100, 1),
+(70, 22, 3, 100, 1),
+(71, 23, 3, 100, 1),
+(72, 23, 4, 100, 1),
+(73, 23, 2, 100, 1),
+(74, 24, 3, 100, 1),
+(75, 24, 4, 100, 1),
+(76, 24, 2, 100, 1),
+(77, 25, 3, 100, 1),
+(78, 25, 4, 100, 1),
+(79, 25, 2, 100, 1),
+(80, 26, 3, 100, 1),
+(81, 26, 4, 100, 1),
+(82, 26, 2, 100, 1);
 
 -- --------------------------------------------------------
 
@@ -485,6 +624,12 @@ ALTER TABLE `remember_me_tokens`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indexes for table `tbl_avail_sit`
+--
+ALTER TABLE `tbl_avail_sit`
+  ADD PRIMARY KEY (`sitid`);
+
+--
 -- Indexes for table `tbl_cart`
 --
 ALTER TABLE `tbl_cart`
@@ -580,10 +725,16 @@ ALTER TABLE `remember_me_tokens`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `tbl_avail_sit`
+--
+ALTER TABLE `tbl_avail_sit`
+  MODIFY `sitid` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+
+--
 -- AUTO_INCREMENT for table `tbl_cart`
 --
 ALTER TABLE `tbl_cart`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=40;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
 
 --
 -- AUTO_INCREMENT for table `tbl_categorry`
@@ -607,7 +758,7 @@ ALTER TABLE `tbl_designation`
 -- AUTO_INCREMENT for table `tbl_order`
 --
 ALTER TABLE `tbl_order`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT for table `tbl_order_discount`
@@ -619,7 +770,7 @@ ALTER TABLE `tbl_order_discount`
 -- AUTO_INCREMENT for table `tbl_order_item`
 --
 ALTER TABLE `tbl_order_item`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT for table `tbl_payment`

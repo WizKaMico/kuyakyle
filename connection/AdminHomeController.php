@@ -53,7 +53,27 @@ if(!empty($_GET["cashier"])) {
                     
                 }
             }
-        break;    
+        break;   
+        
+        case "updateOrderTable":
+            if(isset($_POST['proceed'])){
+                $order_id = $_POST['order_id'];
+                $status = $_POST['status'];
+                if(!empty($order_id) && !empty($status)){
+                  $myOrder = $portCont->checkTheOrderInTheTable($order_id);   
+                  if(!empty($myOrder)){
+                      $table = $myOrder[0]['name'];
+                      $checkMyTable = $portCont->theTableSearch($table); 
+                      if(!empty($checkMyTable)){
+                         $myTable = $checkMyTable[0]['sitid'];
+                         $portCont->updateMyTableStatus($myTable,$status);
+                         header('Location: home.php?view=home&message=success&myTable='.$myTable);
+                      }
+                  }
+                }
+            }
+
+            break;
     }
 }
 
@@ -279,6 +299,8 @@ if (!empty($_GET["action"])) {
                             }
                         }
                         break;
+
+              
 
           }
         }

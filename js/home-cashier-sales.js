@@ -81,8 +81,10 @@ var gridOptions7 = {
   function orderLinkRenderer(params) {
     var member = params.value;
     var amount = params.data.discount_amount !== null && params.data.discount_amount > 0 ?
-      params.data.discount_amount :
+      params.data.discount_amount:
       params.data.amount;
+      params.data.customer_id;
+      var oid =   params.value;
   
     var link = document.createElement('a');
     link.href = '#';
@@ -90,7 +92,7 @@ var gridOptions7 = {
   
     link.addEventListener('click', function(event) {
       event.preventDefault();
-      openModal(member, amount);
+      openModal(member, amount, oid);
     });
   
     return link;
@@ -110,7 +112,7 @@ var gridOptions7 = {
   //   orderInput.value = member;
   // }
 
-  function openModal(member, amount) {
+  function openModal(member, amount, oid) {
     // Display the modal
     console.log(member);
     console.log(amount); // You can use the amount value in your modal logic if needed
@@ -119,8 +121,10 @@ var gridOptions7 = {
   
     // Populate the modal content using the member and amount
     const orderInput = modal.querySelector('#orderInput');
+    const orderCheck = modal.querySelector('#orderCheck');
     const amountInput = modal.querySelector('#amountInput'); // Assuming you have an amount input field in your modal
     orderInput.value = member;
+    orderCheck.value = oid;
     amountInput.value = amount; // Populate amount if needed
   }
   
